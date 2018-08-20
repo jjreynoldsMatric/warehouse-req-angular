@@ -1,0 +1,13 @@
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+    align-items: center;
+}
+div {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+label {
+  font-weight: 700;
+}

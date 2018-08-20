@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col text-center">
+        <h1>New Requisition</h1>
+    </div>
+</div>
+<form [formGroup]="newReqForm" (ngSubmit)="submit()">
+    <div class="row">
+        <div class="col text-center">
+            <div class="row">
+                <div class="col text-center">
+                    <label for="employee">Employee</label>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 1px">
+                <div class="col text-center">
+                    <select id="employee" name="employee" formControlName="employee" (change)="this.empIndex = i">
+                        <option value="" disabled>Please select an employee</option>
+                        <option *ngFor="let employee of employees; let i = index" [ngValue]="employee">
+                            {{employee.empFull}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col text-center">
+            <div class="row">
+                <div class="col text-center">
+                    <label for="job">Job #</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <input type="text" id="job" name="job" formControlName="job" (keyup.enter)="enterJob(newReqForm.get('job').value)" (blur)="enterJob(newReqForm.get('job').value)">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <span class="smallspan" [ngStyle]="{'color':this.jobValid === 'Please enter a valid, released job' ? 'red' : 'black' }">{{this.jobValid}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col text-center">
+            <div class="row">
+                <div class="col text-center">
+                    <label for="department">Department</label>
+                </div>
+            </div>
+            <div class="row" *ngIf="this.newReqForm.get('employee').value">
+                <div class="col text-center">
+                    <span>{{this.newReqForm.get('employee').value.empDept}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div formArrayName="requisitionItems" style="padding-bottom: 3px">
+        <div *ngFor="let control of newReqForm.controls['requisitionItems'].controls; let i = index" class="well" style="border: 1px solid black; border-radius: 10px; margin-top: 10px;">
+            <item-form-control [ReqForm]="newReqForm.controls.requisitionItems.controls[i]" [index]='i' style="padding-bottom: 10px"></item-form-control>
+        </div>
+    </div>
+    <div class="row btn-block">
+        <div class="col pull-left">
+            <button class="btn btn-primary btn-lg" type="button" (click)="addItem()">Add Another Item</button>
+        </div>
+        <div class="col text-center">
+            <button type="submit" class="btn btn-success pull-right btn-lg" [disabled]="!newReqForm.valid">Submit</button>
+        </div>
+    </div>
+</form>
+<h1 style="color: red">{{errorMessage}}</h1>

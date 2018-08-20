@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col text-center">
+        <h1>Edit Requisition</h1>
+    </div>
+</div>
+<form *ngIf="editReq" [formGroup]="newForm" (ngSubmit)="submit()">
+    <div class="row">
+        <div class="col text-center">
+            <h3>Warehouse Requisition: {{this.editReq.id}}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <div class="row">
+                <div class="col text-center">
+                    <label>Employee</label>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 1px">
+                <div class="col text-center">
+                    <span>{{this.editReq.employee}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col text-center">
+            <div class="row">
+                <div class="col text-center">
+                    <label for="job">Job</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <input type="text" id="job" name="job" formControlName="job">
+                </div>
+            </div>
+            <div *ngIf="newForm.controls.job.dirty && !newForm.controls.job.valid">
+                Please enter a valid job number
+            </div>
+        </div>
+        <div class="col text-center">
+            <div class="row">
+                <div class="col text-center">
+                    <label>Department</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <span>{{this.editReq.department}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div formArrayName="requisitionItem" style="padding-bottom: 3px">
+        <div *ngFor="let control of newForm.controls['requisitionItem'].controls; let i = index" style="border: 1px solid black; border-radius: 10px; margin-top: 10px;">
+            <edit-items (remove)='onRemove($event)'  [newReqForm]="newForm.controls.requisitionItem.controls[i]" style="padding-bottom: 10px"
+                        [index]='i'></edit-items>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <button type="button" class="btn btn-danger btn-lg" (click)="cancel()">Cancel Edit</button>
+        </div>
+        <div class="col text-center">
+            <button type="submit" class="btn btn-success btn-lg" [disabled]="!newForm.valid">Submit</button>
+        </div>
+
+    </div>
+</form>
+<h1 style="color: red">{{errorMessage}}</h1>

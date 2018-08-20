@@ -1,0 +1,31 @@
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.header {
+  font-weight: 500;
+}
+
+.row {
+}
+
+.well {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+
+.reqs {
+  margin-bottom: 5px;
+}
+
+.flexthis.container:before,
+.flexthis.container:after,
+.flexthis.row:before,
+.flexthis.row:after {
+  content: normal;
+}

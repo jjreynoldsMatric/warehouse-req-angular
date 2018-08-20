@@ -1,0 +1,30 @@
+<div class="no-scroll ">
+  <div class="row">
+    <div class="col text-center">
+      <h2 style="padding-bottom: 0px; margin-bottom: 0px;">WARNING</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <h5 style="padding-top: 0; margin-top: 0px;">ARE YOU SURE YOU WANT TO DELETE REQUISITION <strong>{{this.reqId}}</strong>? </h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center" style="align-items:center">
+      <h5>THIS ACTION IS <u>PERMANENT</u> AND <u>CANNOT BE UNDONE.</u> PLEASE USE CAUTION.</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <button ion-button color="danger" class="btn btn-success btn-lg" (click)="cancel()">Cancel</button>
+    </div>
+    <div class="col text-center">
+      <button ion-button type="submit" class="btn btn-danger btn-lg" (click)="confirm()">Delete this Requisition</button>
+    </div>
+
+
+  </div>
+
+  <h1 style="color: red">{{this.errorMessage}}</h1>
+
+</div>

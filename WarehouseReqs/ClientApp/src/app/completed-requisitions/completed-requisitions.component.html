@@ -1,0 +1,38 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col text-center">
+            <h1>Completed Requisitions</h1>
+        </div>
+    </div>
+    <div class="sticky-top card " style="margin-bottom:15px;border:1px solid black ; border-radius: 10px;">
+        <div class="row card-header">
+            <div class="col header text-center">ID</div>
+            <div class="col header text-center">Type</div>
+            <div class="col header text-center">Requested On</div>
+            <div class="col header text-center">Requested By</div>
+            <div class="col header text-center">Manage</div>
+        </div>
+    </div>
+    <div class="reqs" *ngFor="let req of requisitions; let i = index">
+        <div *ngIf="req.filled===true" >
+            <div *ngIf="req.filled===true" class="row well" style="border:1px solid black ; border-radius: 10px; font-size: 140%; font-weight: 500; ">
+                <div class="col text-center">{{req.id}}</div>
+                <div class="col text-center" *ngIf=" req.job.length == 0 ; ">Misc. Issue</div>
+                <div class="col text-center" *ngIf="req.job.length != 0; ">Job Issue</div>
+                <div class="col text-center">{{req.createDate | date:'shortDate'}}</div>
+                <div class="col text-center">
+                    <div class="row">
+                        <div class="col text-center">{{req.employee}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">Dept: {{req.department}}</div>
+                    </div>
+                </div>
+
+                <div class="col text-center">
+                    <button class="btn btn-primary btn-lg" (click)="manage(req)">Manage</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

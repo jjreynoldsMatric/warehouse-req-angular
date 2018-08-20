@@ -1,0 +1,87 @@
+<div>
+  <div class="row">
+    <div class="col text-center" style="align-items:center">
+      <h2> Issue Parts</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center" style="align-items: center">
+      <h5> Are you sure you want to issue parts?</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center" style="align-items:center">
+      <h5>Choose your name/employee # and how many you are issuing.</h5>
+    </div>
+  </div>
+  <div class="row" style="align-items: center">
+    <div class="col text-center">
+      <h6>Item: {{reqItem?.item}}</h6>
+    </div>
+    <div class="col text-center">
+      <h6>Quantity: {{reqItem?.quantityFilled}}/{{reqItem?.quantity}}</h6>
+    </div>
+  </div>
+
+  <form [formGroup]="issuePartsForm">
+    <div class="row" style="align-content: center; align-items: center">
+      <div class="col text-center">
+        <div class="row">
+          <div class="col text-center">
+            <label for="employee">Employee</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <select id="employee" name="employee" formControlName="employee">
+              <option value="" disabled>Please select an employee</option>
+              <option *ngFor="let employee of employeeService.whseEmployees" [ngValue]="employee.empFull">
+                {{employee.empFull}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col text-center">
+        <div class="row">
+          <div class="col text-center">
+            <label for="quantity">Quantity</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <input type="number" id="quantity" formControlName="quantity" name="quantity" min="0">
+          </div>
+        </div>
+      </div>
+      <div class="col text-center">
+        <div class="row">
+          <div class="col text-center">
+            <label for="location">Location</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <select id="location" formControlName="location" name="location">
+              <option value="" disabled>Please select a location</option>
+              <option *ngFor="let location of this.lots" [ngValue]="location">
+                {{location.location}}: {{location.qtyOnHand}} from lot #: {{location.lot}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="row" style="padding-top: 20px">
+    <div class="col text-center">
+      <button class="btn btn-danger btn-lg" (click)="cancel()">Cancel</button>
+    </div>
+    <div class="col text-center">
+      <button type="submit" class="btn btn-success btn-lg" (click)="issueParts()" [disabled]="!issuePartsForm.valid">Yes</button>
+    </div>
+
+  </div>
+  <h1 style="color: red">{{this.error}}</h1>
+</div>
