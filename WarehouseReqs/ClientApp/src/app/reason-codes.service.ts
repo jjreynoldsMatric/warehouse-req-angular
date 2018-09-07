@@ -12,7 +12,7 @@ export class ReasonCodesProvider {
     this.http.get("/api/reasoncodes").subscribe(response => {
       this.reasonCodes = response;
       //console.log(this.reasonCodes);
-      
+
     });
   }
 

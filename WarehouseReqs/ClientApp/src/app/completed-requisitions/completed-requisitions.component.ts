@@ -4,31 +4,31 @@ import { ngxZendeskWebwidgetService } from "../../../node_modules/ngx-zendesk-we
 import { Router } from "@angular/router";
 
 @Component({
-    selector: "app-completed-requisitions",
-    templateUrl: "./completed-requisitions.component.html",
-    styleUrls: ["./completed-requisitions.component.css"]
+  selector: "app-completed-requisitions",
+  templateUrl: "./completed-requisitions.component.html",
+  styleUrls: ["./completed-requisitions.component.css"]
 })
 export class CompletedRequisitionsComponent implements OnInit {
 
-    requisitions: any;
+  requisitions: any;
 
-    constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, public router: Router) {
-        _ngxZendeskWebwidgetService.show();
-    }
+  constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, public router: Router) {
+    _ngxZendeskWebwidgetService.show();
+  }
 
-    openFeedback() {
-        this._ngxZendeskWebwidgetService.activate();
-    }
+  openFeedback() {
+    this._ngxZendeskWebwidgetService.activate();
+  }
 
-    ngOnInit() {
-        this.reqService.loadRequisitions().subscribe(response => {
-            this.requisitions = response;
-            //console.log(this.requisitions);
-        });
-    }
-    manage(req) {
-        let id = req.id;
-        console.log(`THIS IS THE REQ${id}`);
-        this.router.navigate(["/manage", id]);
-    }
+  ngOnInit() {
+    this.reqService.loadRequisitions().subscribe(response => {
+      this.requisitions = response;
+      //console.log(this.requisitions);
+    });
+  }
+  manage(req) {
+    let id = req.id;
+    console.log(`THIS IS THE REQ${id}`);
+    this.router.navigate(["/manage", id]);
+  }
 }

@@ -1,92 +1,91 @@
 
 <div>
-    <div class="row">
-        <div class="col text-center">
-            <h2 style="padding-bottom: 0px; margin-bottom: 0px;color:red">WARNING</h2>
-        </div>
+  <div class="row">
+    <div class="col text-center">
+      <h2 style="padding-bottom: 0px; margin-bottom: 0px;color:red">WARNING</h2>
     </div>
-    <div class="row">
-        <div class="col text-center">
-            <h3 style="padding-top: 0; margin-top: 0px;color:red">YOU ARE ISSUING PARTS FROM A LOCATION WHERE THE QUANTITY ON HAND IS ZERO (0)</h3>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <h3 style="padding-top: 0; margin-top: 0px;color:red">YOU ARE ISSUING PARTS FROM A LOCATION WHERE THE QUANTITY ON HAND IS ZERO (0)</h3>
     </div>
-    <div class="row">
-        <div class="col text-center">
-            <h5>Item: {{reqItem?.item}}</h5>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <h5>Item: {{reqItem?.item}}</h5>
+    </div>
+    <div class="col text-center">
+      <h5>Quantity: {{reqItem?.quantityFilled}}/{{reqItem?.quantity}}</h5>
+    </div>
+  </div>
+
+  <form [formGroup]="issuePartsForm">
+    <div class="row" style="align-content:center; align-items:center">
+      <div class="col text-center">
+        <div class="row">
+          <div class="col text-center">
+            <label for="employee">Employee</label>
+          </div>
         </div>
-        <div class="col text-center">
-            <h5>Quantity: {{reqItem?.quantityFilled}}/{{reqItem?.quantity}}</h5>
+        <div class="row">
+          <div class="col text-center">
+            <select id="employee" name="employee" formControlName="employee">
+              <option value="" disabled>Please select an employee</option>
+              <option *ngFor="let employee of employeeService.whseEmployees" [ngValue]="employee.empFull">
+                {{employee.empFull}}
+              </option>
+            </select>
+          </div>
         </div>
+      </div>
+      <div class="col text-center">
+        <div class="row">
+          <div class="col text-center">
+            <label for="quantity">Quantity</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <input type="number" id="quantity" formControlName="quantity" name="quantity" min="0">
+          </div>
+        </div>
+      </div>
+      <div class="col text-center">
+        <div class="row">
+          <div class="col text-center">
+            <label for="location">Location</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <select id="location" formControlName="location" name="location">
+              <ng-container *ngFor="let location of this.shortageLocs">
+                <option *ngIf="location.lot === null || location.lot === undefined; else elseBlock" [ngValue]="location">
+                  {{location.location}}
+                </option>
+                <ng-template #elseBlock>
+                  <option [ngValue]="location">
+                    {{location.location}} from lot #: {{location.lot}}
+                  </option>
+
+                </ng-template>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="row" style="padding-top:20px">
+    <div class="col text-center">
+      <button class="btn btn-danger btn-lg" (click)="cancel()">Cancel</button>
+    </div>
+    <div class="col text-center">
+      <button ion-button type="submit" class="btn btn-success btn-lg" (click)="createShortage()" [disabled]="!issuePartsForm.valid">Yes</button>
     </div>
 
-    <form [formGroup]="issuePartsForm">
-        <div class="row" style="align-content:center; align-items:center">
-            <div class="col text-center">
-                <div class="row">
-                    <div class="col text-center">
-                        <label for="employee">Employee</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col text-center">
-                        <select id="employee" name="employee" formControlName="employee">
-                            <option value="" disabled>Please select an employee</option>
-                            <option *ngFor="let employee of employeeService.whseEmployees" [ngValue]="employee.empFull">
-                                {{employee.empFull}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col text-center">
-                <div class="row">
-                    <div class="col text-center">
-                        <label for="quantity">Quantity</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col text-center">
-                        <input type="number" id="quantity" formControlName="quantity" name="quantity" min="0">
-                    </div>
-                </div>
-            </div>
-            <div class="col text-center">
-                <div class="row">
-                    <div class="col text-center">
-                        <label for="location">Location</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col text-center">
-                        <select id="location" formControlName="location" name="location">
-                            <ng-container *ngFor="let location of this.shortageLocs">
-                                <option *ngIf="location.lot === null || location.lot === undefined; else elseBlock" [ngValue]="location">
-                                    {{location.location}}
-                                </option>
-                                <ng-template #elseBlock>
-                                    <option [ngValue]="location">
-                                        {{location.location}} from lot #: {{location.lot}}
-                                    </option>
-
-                                </ng-template>
-                            </ng-container>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <div class="row" style="padding-top:20px">
-        <div class="col text-center">
-            <button class="btn btn-danger btn-lg" (click)="cancel()">Cancel</button>
-        </div>
-        <div class="col text-center">
-            <button ion-button type="submit" class="btn btn-success btn-lg" (click)="createShortage()" [disabled]="!issuePartsForm.valid">Yes</button>
-        </div>
-
-    </div>
-    <h1 style="color: red">{{this.error}}</h1>
+  </div>
+  <h1 style="color: red">{{this.error}}</h1>
 </div>
-
 

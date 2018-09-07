@@ -19,11 +19,11 @@ export class ItemsProvider {
 
   loadLocations(itemReqId) {
     this.http.get(`/api/items/location/${itemReqId}`).subscribe(response => {
-    this.locations = response;    
-  });
+      this.locations = response;
+    });
   }
   loadLocationsWithLot(itemReqId) {
-   return this.http.get(`/api/items/ItemLot/${itemReqId}` );
+    return this.http.get(`/api/items/ItemLot/${itemReqId}`);
   }
 
   loadShortageLocations(itemReqId) {

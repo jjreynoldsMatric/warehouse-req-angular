@@ -24,68 +24,68 @@ import { ItemFormControlComponent } from "./item-form-control/item-form-control.
 import { APP_BASE_HREF } from "@angular/common";
 
 export class ZendeskConfig extends ngxZendeskWebwidgetConfig {
-    accountUrl = "matric.zendesk.com";
-    beforePageLoad(zE) {
-        zE.setLocale("en");
-        zE.hide();
-    }
+  accountUrl = "matric.zendesk.com";
+  beforePageLoad(zE) {
+    zE.setLocale("en");
+    zE.hide();
+  }
 }
 
 const routes: Routes = [
-    { path: "", component: OpenRequisitionsComponent },
-    { path: "open-requisitions", component: OpenRequisitionsComponent },
-    { path: "completed-requisitions", component: CompletedRequisitionsComponent },
-    { path: "manage/:ReqId", component: ManageComponent },
-    { path: "edit/:ReqId", component: EditComponent },
-    { path: "new-requisition", component: NewRequisitionComponent },
-    { path: "issue-parts/:ReqId/:ReqItemId", component: IssuePartsComponent },
-    { path: "create-shortage/:ReqId/:ReqItemId", component: CreateShortageComponent },
-    { path: "confirm-remove-item/:ReqId/:ReqItemId", component: ConfirmRemoveItemComponent },
-    { path: "confirm/:ReqId", component: ConfirmComponent }
+  { path: "", component: OpenRequisitionsComponent },
+  { path: "open-requisitions", component: OpenRequisitionsComponent },
+  { path: "completed-requisitions", component: CompletedRequisitionsComponent },
+  { path: "manage/:ReqId", component: ManageComponent },
+  { path: "edit/:ReqId", component: EditComponent },
+  { path: "new-requisition", component: NewRequisitionComponent },
+  { path: "issue-parts/:ReqId/:ReqItemId", component: IssuePartsComponent },
+  { path: "create-shortage/:ReqId/:ReqItemId", component: CreateShortageComponent },
+  { path: "confirm-remove-item/:ReqId/:ReqItemId", component: ConfirmRemoveItemComponent },
+  { path: "confirm/:ReqId", component: ConfirmComponent }
 ];
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        OpenRequisitionsComponent,
-        CompletedRequisitionsComponent,
-        EditComponent,
-        ManageComponent,
-        NewRequisitionComponent,
-        ConfirmComponent,
-        ConfirmRemoveItemComponent,
-        CreateShortageComponent,
-        EditItemsComponent,
-        IssuePartsComponent,
-        ItemFormControlComponent
-    ],
-    imports: [
-        BrowserModule,
-        RouterModule.forRoot(routes, {
-            useHash: true
-        }),
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ngxZendeskWebwidgetModule.forRoot(ZendeskConfig),
-        
-    ],
-    entryComponents: [
-        ItemFormControlComponent,
-        AppComponent,
-        OpenRequisitionsComponent,
-        CompletedRequisitionsComponent,
-        EditComponent,
-        ManageComponent,
-        NewRequisitionComponent,
-        ConfirmComponent,
-        ConfirmRemoveItemComponent,
-        CreateShortageComponent,
-        EditItemsComponent,
-        IssuePartsComponent,
-    ],
-    exports: [],
-    providers: [RequisitionProvider, ReasonCodesProvider, ItemsProvider, EmployeeProvider, { provide: APP_BASE_HREF, useValue: "/" }],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    OpenRequisitionsComponent,
+    CompletedRequisitionsComponent,
+    EditComponent,
+    ManageComponent,
+    NewRequisitionComponent,
+    ConfirmComponent,
+    ConfirmRemoveItemComponent,
+    CreateShortageComponent,
+    EditItemsComponent,
+    IssuePartsComponent,
+    ItemFormControlComponent
+  ],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes, {
+      useHash: true
+    }),
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ngxZendeskWebwidgetModule.forRoot(ZendeskConfig),
+
+  ],
+  entryComponents: [
+    ItemFormControlComponent,
+    AppComponent,
+    OpenRequisitionsComponent,
+    CompletedRequisitionsComponent,
+    EditComponent,
+    ManageComponent,
+    NewRequisitionComponent,
+    ConfirmComponent,
+    ConfirmRemoveItemComponent,
+    CreateShortageComponent,
+    EditItemsComponent,
+    IssuePartsComponent,
+  ],
+  exports: [],
+  providers: [RequisitionProvider, ReasonCodesProvider, ItemsProvider, EmployeeProvider, { provide: APP_BASE_HREF, useValue: "/" }],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

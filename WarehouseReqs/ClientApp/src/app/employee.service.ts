@@ -15,7 +15,7 @@ export class EmployeeProvider {
   }
 
   loadWhseEmployees() {
-      this.http.get("/api/employees/WhseEmployees").subscribe(response => {
+    this.http.get("/api/employees/WhseEmployees").subscribe(response => {
 
       this.whseEmployees = response;
 

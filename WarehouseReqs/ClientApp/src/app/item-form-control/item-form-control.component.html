@@ -1,81 +1,81 @@
 <div class="form-group" [formGroup]="newReqForm">
-    <div class="row">
+  <div class="row">
+    <div class="col text-center">
+      <div class="row">
         <div class="col text-center">
-            <div class="row">
-                <div class="col text-center">
-                    <label [attr.for]="'item'+index">Matric Part #</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <input type="text" [attr.id]="item" formControlName="item" (keyup.enter)="enterItem(newReqForm.get('item').value)" (blur)="enterItem(newReqForm.get('item').value)">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <span class="smallspan" [ngStyle]="{'color':this.itemDesc === 'Could not find this item' ? 'red' : 'black' }">{{this.itemDesc}}</span>
-                </div>
-            </div>
+          <label [attr.for]="'item'+index">Matric Part #</label>
         </div>
+      </div>
+      <div class="row">
         <div class="col text-center">
-            <div class="row">
-                <div class="col text-center">
-                    <label [attr.for]="'quantity'+index">Quantity</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-center" no-padding>
-                    <input type="number" [attr.id]="quantity" formControlName="quantity" min="0">
-                </div>
-            </div>
+          <input type="text" [attr.id]="item" formControlName="item" (keyup.enter)="enterItem(newReqForm.get('item').value)" (blur)="enterItem(newReqForm.get('item').value)">
         </div>
+      </div>
+      <div class="row">
         <div class="col text-center">
-            <div class="row">
-                <div class="col text-center">
-                    <label [attr.for]="'reasonCode'+index">Reason Code</label>
-                </div>
-            </div>
-            <div class="row" style="padding-top: 1px">
-                <div class="col text-center">
-                    <select [attr.id]="reasonCode" formControlName="reasonCode" placeholder="Reason Code" style="max-width: 100% !important"
-                            no-padding>
-                        <option value="" disabled>Please select a reason code</option>
-                        <option *ngFor="let reasonCode of reasonCodesService.reasonCodes">
-                            {{reasonCode}}
-                        </option>
-                    </select>
-                </div>
-            </div>
+          <span class="smallspan" [ngStyle]="{'color':this.itemDesc === 'Could not find this item' ? 'red' : 'black' }">{{this.itemDesc}}</span>
         </div>
-        <div class="col text-center">
-            <div class="row">
-                <div class="col text-center">
-                    <label [attr.for]="operation">Operation</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <select [attr.id]="operation" formControlName="operation" placeholder="Operation" style="max-width: 100% !important"
-                            no-padding>
-                        <option value="" disabled>Please select an operation</option>
-                        <option *ngFor="let op of operNums">
-                            {{op}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col text-center">
-            <div class="row">
-                <div class="col text-center">
-                    <label [attr.for]="action">Action</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <button class="btn btn-primary btn-lg" [attr.id]="action" type="button" (click)="removeItem(index)">Remove</button>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="col text-center">
+      <div class="row">
+        <div class="col text-center">
+          <label [attr.for]="'quantity'+index">Quantity</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center" no-padding>
+          <input type="number" [attr.id]="quantity" formControlName="quantity" min="0">
+        </div>
+      </div>
+    </div>
+    <div class="col text-center">
+      <div class="row">
+        <div class="col text-center">
+          <label [attr.for]="'reasonCode'+index">Reason Code</label>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 1px">
+        <div class="col text-center">
+          <select [attr.id]="reasonCode" formControlName="reasonCode" placeholder="Reason Code" style="max-width: 100% !important"
+                  no-padding>
+            <option value="" disabled>Please select a reason code</option>
+            <option *ngFor="let reasonCode of reasonCodesService.reasonCodes">
+              {{reasonCode}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col text-center">
+      <div class="row">
+        <div class="col text-center">
+          <label [attr.for]="operation">Operation</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <select [attr.id]="operation" formControlName="operation" placeholder="Operation" style="max-width: 100% !important"
+                  no-padding>
+            <option value="" disabled>Please select an operation</option>
+            <option *ngFor="let op of operNums">
+              {{op}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col text-center">
+      <div class="row">
+        <div class="col text-center">
+          <label [attr.for]="action">Action</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <button class="btn btn-primary btn-lg" [attr.id]="action" type="button" (click)="removeItem(index)">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

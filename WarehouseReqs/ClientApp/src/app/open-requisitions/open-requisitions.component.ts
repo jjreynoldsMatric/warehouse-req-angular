@@ -12,25 +12,25 @@ export class OpenRequisitionsComponent implements OnInit {
 
   requisitions: any;
 
-    constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, public router: Router) {
-        _ngxZendeskWebwidgetService.show();
-    }
+  constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, public router: Router) {
+    _ngxZendeskWebwidgetService.show();
+  }
 
-  openFeedback(){
+  openFeedback() {
     this._ngxZendeskWebwidgetService.activate();
   }
 
   ngOnInit() {
     this.reqService.loadRequisitions().subscribe(response => {
-        this.requisitions = response;
-        //console.log(JSON.stringify(this.requisitions));
+      this.requisitions = response;
+      //console.log(JSON.stringify(this.requisitions));
     });
   }
 
-    manage(req) {
-        let id = req.id;
-        //console.log("THIS IS THE REQ" + id);
-        this.router.navigate(["/manage", id]);
-    }
+  manage(req) {
+    let id = req.id;
+    //console.log("THIS IS THE REQ" + id);
+    this.router.navigate(["/manage", id]);
+  }
 
 }
