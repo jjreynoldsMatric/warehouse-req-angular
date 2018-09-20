@@ -7,7 +7,7 @@ namespace WarehouseReqs.ViewModels
     {
         public int ItemReqId { get; set; }
         public string ProcessedBy { get; set; }
-        public float Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public string Location { get; set; }
         public string Lot { get; set; }
     }

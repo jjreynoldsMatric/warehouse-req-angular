@@ -7,7 +7,7 @@ namespace WarehouseReqs.Models
 {
     public partial class InsertItem
     {
-        public float Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public string Job { get; set; }
         public string OperNum { get; set; }
         public string Item { get; set; }

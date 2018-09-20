@@ -45,7 +45,7 @@ export class IssuePartsComponent implements OnInit {
 
     this.issuePartsForm = this.fb.group({
       employee: ["", Validators.required],
-      quantity: ["", Validators.compose([Validators.required, Validators.pattern("^[0-9]+$")])],
+      quantity: ["", Validators.compose([Validators.required, Validators.pattern("^-{0}[0-9]+\.?[0-9]*$")])],
       location: ["", Validators.required]
     });
 

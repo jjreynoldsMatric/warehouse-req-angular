@@ -49,6 +49,11 @@
             <input type="number" id="quantity" formControlName="quantity" name="quantity" min="0">
           </div>
         </div>
+        <div class="row" *ngIf="!this.issuePartsForm.get('quantity').valid && (this.issuePartsForm.get('quantity').dirty || this.issuePartsForm.get('quantity').touched)">
+          <div class="col text-center">
+            <span style="color: red">Please enter a valid quantity. </span>
+          </div>
+        </div>
       </div>
       <div class="col text-center">
         <div class="row">

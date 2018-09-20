@@ -497,7 +497,7 @@ namespace WarehouseReqs.Services
                 }
             }
         }
-        //float quantity, string job, string oper_num, string item, string loc, string u_m, string lot
+        //decimal quantity, string job, string oper_num, string item, string loc, string u_m, string lot
         internal int CreateShortage(InsertItem insertItem)
         {
             using (var matContext = new MatAppContext())
@@ -514,7 +514,7 @@ namespace WarehouseReqs.Services
                     {
                         var dcjmId = matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcjm (trans_type, stat, trans_date, job, suffix, oper_num, item, whse, loc, qty, u_m, lot, override, emp_num)
                             VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}); 
-                            SELECT CAST(scope_identity() AS int)", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, (decimal?)insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
+                            SELECT CAST(scope_identity() AS int)", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
 
                         var dcjm = matContext.Dcjm.Where(i => i.TransNum == dcjmId).FirstOrDefault();
 
@@ -529,7 +529,7 @@ namespace WarehouseReqs.Services
                         Random random = new Random();
                         int rand_trans_num = random.Next(1, 2147483647);
                         matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcitem (trans_num, trans_type, stat, trans_date, item, whse, loc, count_qty, u_m, lot, reason_code, emp_num) 
-                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, (decimal?)insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
+                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
 
                         var dcitem = matContext.Dcitem.Where(i => i.TransNum == rand_trans_num).FirstOrDefault();
                         if (dcitem?.ErrorMessage != null)
@@ -691,7 +691,7 @@ namespace WarehouseReqs.Services
                         var dcjmId = matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcjm (trans_type, stat, trans_date, job, suffix, oper_num, item, whse, loc, qty, u_m, lot, override, emp_num)
                     VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}); 
                     SELECT CAST(scope_identity() AS int)
-                    ", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, (decimal?)insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
+                    ", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
 
                         var dcjm = matContext.Dcjm.Where(i => i.TransNum == dcjmId).FirstOrDefault();
 
@@ -705,9 +705,9 @@ namespace WarehouseReqs.Services
                     {
                         //The trans num field is not an identity field.  Just using a random number generator for the ID since its only an error processing table.
                         Random random = new Random();
-                        int rand_trans_num = random.Next(1, 2147483636);
+                        int rand_trans_num = random.Next(1, 10000);
                         matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcitem (trans_num, trans_type, stat, trans_date, item, whse, loc, count_qty, u_m, lot, reason_code, emp_num) 
-                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, (decimal?)insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
+                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
 
                         var dcitem = matContext.Dcitem.Where(i => i.TransNum == rand_trans_num).FirstOrDefault();
                         if (dcitem?.ErrorMessage != null)
@@ -979,8 +979,8 @@ namespace WarehouseReqs.Services
                         param.Add(new SqlParameter("@pItemFilled", SqlDbType.Bit) { Value = item.Filled });
                         param.Add(new SqlParameter("@pItem", SqlDbType.VarChar) { Value = item.Item });
                         param.Add(new SqlParameter("@pOperation", SqlDbType.VarChar) { Value = item.Operation });
-                        param.Add(new SqlParameter("@pQuantityRequested", SqlDbType.Float) { Value = item.Quantity });
-                        param.Add(new SqlParameter("@pQuantityFilled", SqlDbType.Float) { Value = item.QuantityFilled });
+                        param.Add(new SqlParameter("@pQuantityRequested", SqlDbType.Decimal) { Value = item.Quantity });
+                        param.Add(new SqlParameter("@pQuantityFilled", SqlDbType.Decimal) { Value = item.QuantityFilled });
                         param.Add(new SqlParameter("@pReasonCode", SqlDbType.VarChar) { Value = item.ReasonCode });
                         param.Add(new SqlParameter("@pItemId", SqlDbType.Int) { Value = item.Id });
 

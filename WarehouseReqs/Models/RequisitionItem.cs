@@ -14,11 +14,11 @@ namespace WarehouseReqs.Models
         public int RequisitionId { get; set; }
         public string Item { get; set; }
         public string ItemDescription { get; set; }
-        public double? Quantity { get; set; }
+        public decimal? Quantity { get; set; }
         public string Lot { get; set; }
         public string ReasonCode { get; set; }
         public string Operation { get; set; }
-        public double QuantityFilled { get; set; }
+        public decimal? QuantityFilled { get; set; }
         public bool? Filled { get; set; }
         public ICollection<RequisitionItemActions> RequisitionItemActions { get; set; }
     }

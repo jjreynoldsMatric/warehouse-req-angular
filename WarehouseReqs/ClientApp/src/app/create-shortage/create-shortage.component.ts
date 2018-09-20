@@ -51,7 +51,7 @@ export class CreateShortageComponent implements OnInit {
     this.partRequest = new PartRequest;
     this.issuePartsForm = this.fb.group({
       employee: ["", Validators.required],
-      quantity: ["", Validators.compose([Validators.required, Validators.pattern("^[0-9]+$")])],
+      quantity: ["", Validators.compose([Validators.required, Validators.pattern("^-{0}[0-9]+\.?[0-9]*$")])],
       location: ["", Validators.required]
     });
   }
