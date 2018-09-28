@@ -162,7 +162,7 @@ export class NewRequisitionComponent implements OnInit {
 
   submit() {
     this.getFormData();
-    console.log(this.requisition);
+   //console.log(this.requisition);
     this.reqService.saveRequisition(this.requisition).subscribe(response => {
       console.log("Should have posted the req");
       this.router.navigate(["/open-requisitions"]);

@@ -22,6 +22,7 @@ import { ItemsProvider } from "./items.service";
 import { EmployeeProvider } from "./employee.service";
 import { ItemFormControlComponent } from "./item-form-control/item-form-control.component";
 import { APP_BASE_HREF } from "@angular/common";
+import { HelpComponent } from './help/help.component';
 
 export class ZendeskConfig extends ngxZendeskWebwidgetConfig {
   accountUrl = "matric.zendesk.com";
@@ -41,7 +42,8 @@ const routes: Routes = [
   { path: "issue-parts/:ReqId/:ReqItemId", component: IssuePartsComponent },
   { path: "create-shortage/:ReqId/:ReqItemId", component: CreateShortageComponent },
   { path: "confirm-remove-item/:ReqId/:ReqItemId", component: ConfirmRemoveItemComponent },
-  { path: "confirm/:ReqId", component: ConfirmComponent }
+  { path: "confirm/:ReqId", component: ConfirmComponent },
+  { path: "help", component: HelpComponent }
 ];
 
 @NgModule({
@@ -57,7 +59,8 @@ const routes: Routes = [
     CreateShortageComponent,
     EditItemsComponent,
     IssuePartsComponent,
-    ItemFormControlComponent
+    ItemFormControlComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +86,7 @@ const routes: Routes = [
     CreateShortageComponent,
     EditItemsComponent,
     IssuePartsComponent,
+    HelpComponent
   ],
   exports: [],
   providers: [RequisitionProvider, ReasonCodesProvider, ItemsProvider, EmployeeProvider, { provide: APP_BASE_HREF, useValue: "/" }],

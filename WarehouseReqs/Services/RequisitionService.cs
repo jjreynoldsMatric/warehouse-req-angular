@@ -344,6 +344,7 @@ namespace WarehouseReqs.Services
                             ReasonCode = item.ReasonCode,
                             Operation = item.Operation,
                             ItemDescription = itemExists.Description,
+                            QuantityFilled = 0,
                             Filled = false
                         };
 

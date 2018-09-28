@@ -1,0 +1,269 @@
+<div class="row well">
+  <div class="col">
+    <div class="row">
+      <div class="col text-center">
+        <h3>Creating a new requisition</h3>
+      </div>
+    </div>
+    <div class="row">
+      <p>
+        1.	Click “New Requisition” on the top navigation bar.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        2.	Select your employee number/name from the “Employee” dropdown list. Your department will be filled in automatically when you select your name.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        3.	If the Requisition is for a job, enter the number in the “Job #” field.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        4.	Enter the “Matric Part #” for the part you are requesting.
+      </p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p>
+        a.	After you enter the part number and click elsewhere on the page, the description for the item will be displayed below the “Matric Part #” field. This allows you to verify that you are requesting the correct part.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        5.	Enter the “Quantity” for this item. If the item you are requesting has a decimal quantity, enter the decimal value for the number you need (i.e. a label with a total quantity of .9971. If you want one, you would request 0.0001).
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        6.	If the Requisition <strong>IS NOT</strong> for a job, select a “Reason Code” from the dropdown list. (NOTE: If there is anything in the “Job #” field, the "Reason Code" field will be disabled, and the “Operation” field will be enabled)
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        7.	If the Requisition <strong>IS</strong> for a job, select the correct “Operation” from the dropdown list. (NOTE: If there <strong>IS NOT</strong> anything in the “Job #” field, the "Operation" field will be disabled, and the “Reason Code” field will be enabled)
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        8.	If you want to request more than one part on this Requisition, press the “Add Another Item” button. This will add a new set of fields for the item you want to enter. Repeat steps 4-8 as necessary.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        9.	If you accidentally click the “Add Another Item” button too many times, you can use the “Remove” button to remove the excess set of fields. (NOTE: If you click “Remove” the item will be removed and the information you entered for that part will not be saved. You will have to re-enter the information.)
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        10.	When you are done entering items, look over the Requisition to make sure there are no errors. Once you have verified everything is correct, click the “Submit” button to submit the Requisition.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        <strong>NOTE: If the “Submit” button is disabled, greyed out or not allowing you to click it, there is a problem with the information you entered.(A required field is not filled in, or something was entered incorrectly)</strong>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="row well">
+  <div class="col">
+    <div class="row">
+      <div class="col text-center">
+        <h3>Issuing parts</h3>
+      </div>
+    </div>
+    <div class="row">
+      <p>
+        1.	From the “Open Requisitions” page, find the Requisition you wish to issue parts to. On that Requisition, click the “Manage” button.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        2.	The “Manage” page will open and the information for that Requisition will be displayed.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        3.	Find the part you want to issue parts to. Click the “Issue Parts” button on that item.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        4.	The “Issue Parts” page will open. The Item and Quantity Filled / Quantity Requested are displayed above the form.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        5.	After you verify you are on the correct part, select your Employee Number/Name from the “Employee” dropdown list.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        6.	Enter the “Quantity” you want to fill for that item.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        7.	Select the “Location” you are issuing the part from. If there is a “Lot Number” associated with the part, it will be shown in the dropdown list. This will cause multiple entries of the same Location (but with different Lot Numbers) to be shown in the list.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        8.	When you have verified everything is correct, click “Yes” to issue parts to the item. You will be redirected back to the “Manage” page.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        9.	At this point, the transaction will be in SyteLine.
+      </p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p>
+        a.	If the Requisition is for a job, the transaction will go to the “Job Material Transactions Error Processing” form in SyteLine.
+      </p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p>
+        b.	If the Requisition is a Miscellaneous Issue, the transaction will go to the “Misc Issue/Receipt And Qty Adjust Error Processing” form in SyteLine.
+      </p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p>
+        c.	Verify the information is correct in the form.
+      </p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p>
+        d.	Once everything is correct, click “Post” on the form and the entry will be entered into SyteLine.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        10.	If all the items in the Requisition have been filled, the Requisition will be moved from the “Open Requisitions” page to the “Completed Requisitions” page.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        <strong>If the part that is requested is not in stock, the “Issue Parts” button will be replaced by the “Create Shortage” button. The process is the same for Create Shortage as it is for Issue Parts, except the “Location” will be the last location that had the stock.</strong>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="row well">
+  <div class="col ">
+    <div class="row">
+      <div class="col text-center">
+        <h3>Editing a requisition</h3>
+      </div>
+    </div>
+    <div class="row">
+      <p>1.	From the “Open Requisitions” page, find the Requisition you wish to issue parts to. On that Requisition, click the “Manage” button.</p>
+    </div>
+    <div class="row">
+      <p>2.	The “Manage” page will open and the information for that Requisition will be displayed.</p>
+    </div>
+    <div class="row">
+      <p>3.	Click the “Edit Requisition” button.</p>
+    </div>
+    <div class="row">
+      <p> 4.	The “Edit” page will be displayed.</p>
+    </div>
+    <div class="row">
+      <p>5.	From this screen, you can change anything about this Requisition except the employee who requested it or add a new part to the Requisition.</p>
+    </div>
+    <div class="row">
+      <p>6.	If you do not want to edit this Requisition, click the “Cancel Edit” button to be redirected back to the “Manage” page without any changes being made.</p>
+    </div>
+    <div class="row">
+      <p>7.	You can remove items from the part list by clicking the “Remove” button on the part you want to delete.</p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p>a.	Once you click the “Remove” button, a “Confirm” page will open. If you do not want to remove this item, press “Cancel” and you will be taken back to the “Edit” page.</p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p>b.	If you are sure you want to remove this item, click the “Delete This Item” button. This will PERMANENTLY remove the item, and everything associated with it (i.e. Part Number, Reason Code/Operation).</p>
+    </div>
+    <div class="row" style="margin-left: 20px;">
+      <p style="color:red"><strong>c.	IF YOU REMOVE AN ITEM AND THEN PRESS “Cancel Edit”, THE ITEM WILL STILL BE REMOVED FROM THE REQUISITION.</strong></p>
+    </div>
+    <div class="row">
+      <p>8.	Once you made the changes, click “Submit” to save the changes. You will be redirected back to the “Manage” page for that Requisition.</p>
+    </div>
+  </div>
+</div>
+<div class="row well">
+  <div class="col">
+    <div class="row">
+      <div class="col text-center">
+        <h3>Deleting a requisition</h3>
+      </div>
+    </div>
+    <div class="row">
+      <p>
+        1.	From the “Open Requisitions” page, find the Requisition you wish to issue parts to. On that Requisition, click the “Manage” button.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        2.	The “Manage” page will open and the information for that Requisition will be displayed.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        3.	Click the “Delete This Requisition” button.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        4.	A “Confirm” page will open. This is the last chance you have to cancel the delete process. If you do not want to delete this Requisition, click the “Cancel” button. This will take you back to the “Manage” page.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        5.	If you are sure you want to delete the Requisition, click the “Delete this Requisition” button. After this is clicked, there is no going back. All the information associated with the Requisition will be deleted.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        <strong>NOTE: If you have issued parts to this Requisition, the transactions will still be in the Error Processing forms in SyteLine for the parts that were issued.</strong>
+      </p>
+    </div>
+
+  </div>
+</div>
+<div class="row well">
+  <div class="col">
+    <div class="row">
+      <div class="col text-center">
+        <h3>Submitting Feedback/Identifying Bugs</h3>
+      </div>
+    </div>
+    <div class="row">
+      <p>
+        1.	If you come across any issues or have an idea for a feature that may be useful and make the product easier to use, click the “Feedback” button in the bottom righthand corner of the application.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        2.	A small form will open.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        3.	Fill this form out, being as detailed as possible.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        4.	Click “Send”. This will automatically submit a ticket to our system.
+      </p>
+    </div>
+    <div class="row">
+      <p>
+        Something as small as a spelling mistake would be appreciated as we are rolling this system out. Please use this feature for any bugs or problems you may encounter.
+      </p>
+    </div>
+  </div>
+</div>
