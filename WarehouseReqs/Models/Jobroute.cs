@@ -8,7 +8,7 @@ namespace WarehouseReqs.Models
         public string Job { get; set; }
         public short Suffix { get; set; }
         public int OperNum { get; set; }
-        public string Wc { get; set; }
+        public string Wc1 { get; set; }
         public decimal? SetupHrsT { get; set; }
         public decimal? SetupCostT { get; set; }
         public byte? Complete { get; set; }

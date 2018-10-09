@@ -22,7 +22,7 @@ namespace WarehouseReqs.Models
         public byte? Override { get; set; }
         public decimal? Cost { get; set; }
         public string Acct { get; set; }
-        public string Um { get; set; }
+        public string UM { get; set; }
         public string AcctUnit1 { get; set; }
         public string AcctUnit2 { get; set; }
         public string AcctUnit3 { get; set; }

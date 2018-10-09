@@ -7,7 +7,8 @@ import { FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { Requisition, RequisitionItem } from "../../../models/models";
 import { ArrayType } from "@angular/compiler/src/output/output_ast";
 import { Router } from "@angular/router";
-
+import { takeUntil } from "rxjs/operators"
+import { Subject } from "rxjs"
 
 @Component({
   selector: "app-new-requisition",
@@ -22,11 +23,13 @@ export class NewRequisitionComponent implements OnInit {
   empIndex: number;
   empDept: any;
   employee: any;
+  reasonCodes: any;
   errorMessage: string;
   newForm: FormGroup;
   arrayControl: any;
   employees: any;
   jobValid: any;
+  private _destroyed$ = new Subject();
 
   constructor(private employeeService: EmployeeProvider, private reasonCodesService: ReasonCodesProvider, private fb: FormBuilder, private reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, public router: Router) {
     this.itemsArray = [];
@@ -50,7 +53,7 @@ export class NewRequisitionComponent implements OnInit {
     this.itemsArray.forEach(item => {
       let newItem = this.fb.group({
         item: ["", Validators.required],
-        quantity: ["", Validators.compose([Validators.required, Validators.min(0), Validators.pattern("^[0-9]+$")])],
+        quantity: ["", Validators.compose([Validators.required, Validators.min(0), Validators.pattern("^-{0}[0-9]+\.?[0-9]*$")])],
         reasonCode: ["", Validators.required],
         operation: [{ value: "", disabled: true }],
       });
@@ -67,8 +70,11 @@ export class NewRequisitionComponent implements OnInit {
 
       this.employees = response;
       //console.log(this.employees)
+      takeUntil(this._destroyed$);
     });;
-    this.reasonCodesService.loadReasonCodes();
+    this.reasonCodesService.loadReasonCodes().subscribe(response => {
+      this.reasonCodes = response;
+    });
   }
 
 
@@ -78,7 +84,7 @@ export class NewRequisitionComponent implements OnInit {
 
         for (let i = 0; i < this.arrayControl.length; i++) {
           this.arrayControl.controls[i].get("operation").enable();
-          this.arrayControl.controls[i].get("operation").setValidators(Validators.compose([Validators.pattern("^[0-9]+$"), Validators.required]));
+          this.arrayControl.controls[i].get("operation").setValidators(Validators.required);
           this.arrayControl.controls[i].get("reasonCode").disable();
         }
       }
@@ -166,8 +172,10 @@ export class NewRequisitionComponent implements OnInit {
     this.reqService.saveRequisition(this.requisition).subscribe(response => {
       console.log("Should have posted the req");
       this.router.navigate(["/open-requisitions"]);
+      takeUntil(this._destroyed$);
     }, err => {
       this.errorMessage = err.error;
+      takeUntil(this._destroyed$);
     });
 
     this.reqService.loadRequisitions();
@@ -186,8 +194,10 @@ export class NewRequisitionComponent implements OnInit {
         else {
           this.jobValid = "Uh something went wrong";
         }
+        takeUntil(this._destroyed$);
       }, err => {
         this.jobValid = err;
+        takeUntil(this._destroyed$);
       }
       );
     }

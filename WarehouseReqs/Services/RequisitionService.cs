@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Newtonsoft.Json;
 using WarehouseReqs.Models;
 using WarehouseReqs.ViewModels;
@@ -45,6 +46,12 @@ namespace WarehouseReqs.Services
                                                                              ReasonCode = ri.ReasonCode,
                                                                              RequisitionId = ri.RequisitionId,
                                                                              Filled = ri.Filled,
+                                                                             Unitcost = ri.Unitcost,
+                                                                             Totalcost = ri.Unitcost * ri.Quantity,
+                                                                             Backflush = ri.Backflush,
+                                                                             LotTracked = ri.LotTracked,
+                                                                             SerialTracked = ri.SerialTracked,
+                                                                             CycleCounted = ri.CycleCounted,
                                                                              ItemLocViewModel = from l in location
                                                                                                 where l.Item == ri.Item
                                                                                                 select new ItemLocViewModel
@@ -67,7 +74,6 @@ namespace WarehouseReqs.Services
                 using (var requisitionContext = new WarehouseRequisitionContext())
                 {
                     var location = matContext.Itemloc.Where(i => i.QtyOnHand > 0).ToList();
-
                     var singleReq = from r in requisitionContext.Requisition
                                     where r.Id == itemReqId
                                     select new Requisition
@@ -92,6 +98,12 @@ namespace WarehouseReqs.Services
                                                               ReasonCode = ri.ReasonCode,
                                                               RequisitionId = ri.RequisitionId,
                                                               Filled = ri.Filled,
+                                                              Unitcost = ri.Unitcost,
+                                                              Totalcost = ri.Unitcost * ri.Quantity,
+                                                              Backflush = ri.Backflush,
+                                                              LotTracked = ri.LotTracked,
+                                                              SerialTracked = ri.SerialTracked,
+                                                              CycleCounted = ri.CycleCounted,
                                                               ItemLocViewModel = from l in location
                                                                                  where l.Item == ri.Item
                                                                                  select new ItemLocViewModel
@@ -100,10 +112,11 @@ namespace WarehouseReqs.Services
                                                                                      Rank = l.Rank,
                                                                                      QtyOnHand = l.QtyOnHand,
                                                                                      Location = l.Loc
-                                                                                 }
+                                                                                 }               
                                                           }
 
                                     };
+                    
                     return singleReq.FirstOrDefault();
                 }
             }
@@ -131,6 +144,12 @@ namespace WarehouseReqs.Services
                                             ReasonCode = ri.ReasonCode,
                                             RequisitionId = ri.RequisitionId,
                                             Filled = ri.Filled,
+                                            Unitcost = ri.Unitcost,
+                                            Totalcost = ri.Unitcost * ri.Quantity,
+                                            Backflush = ri.Backflush,
+                                            LotTracked = ri.LotTracked,
+                                            SerialTracked = ri.SerialTracked,
+                                            CycleCounted = ri.CycleCounted,
                                             ItemLocViewModel = from l in location
                                                                where l.Item == ri.Item
                                                                select new ItemLocViewModel
@@ -153,8 +172,8 @@ namespace WarehouseReqs.Services
                 using (var requisitionContext = new WarehouseRequisitionContext())
                 {
                     var location = matContext.Itemloc.Where(i => i.QtyOnHand > 0).ToList();
-
-                    var requisitionsWithLocation = from r in requisitionContext.Requisition
+                    
+                    var requisitions = from r in requisitionContext.Requisition
                                                    select new RequisitionViewModel
                                                    {
                                                        Id = r.Id,
@@ -163,32 +182,8 @@ namespace WarehouseReqs.Services
                                                        CreateDate = r.CreateDate,
                                                        Employee = r.Employee,
                                                        Filled = r.Filled,
-                                                       RequisitionItem = from ri in requisitionContext.RequisitionItem
-                                                                         where ri.RequisitionId == r.Id
-                                                                         select new RequisitionItemWithLocationViewModel
-                                                                         {
-                                                                             Id = ri.Id,
-                                                                             Item = ri.Item,
-                                                                             ItemDescription = ri.ItemDescription,
-                                                                             Lot = ri.Lot,
-                                                                             Operation = ri.Operation,
-                                                                             Quantity = ri.Quantity,
-                                                                             QuantityFilled = ri.QuantityFilled,
-                                                                             ReasonCode = ri.ReasonCode,
-                                                                             RequisitionId = ri.RequisitionId,
-                                                                             Filled = ri.Filled,
-                                                                             ItemLocViewModel = from l in location
-                                                                                                where l.Item == ri.Item
-                                                                                                select new ItemLocViewModel
-                                                                                                {
-                                                                                                    Item = l.Item,
-                                                                                                    Rank = l.Rank,
-                                                                                                    QtyOnHand = l.QtyOnHand,
-                                                                                                    Location = l.Loc
-                                                                                                }
-                                                                         }
                                                    };
-                    var completedReqs = requisitionsWithLocation.Where(r => r.Filled == true);
+                    var completedReqs = requisitions.Where(r => r.Filled == true);
                     return completedReqs.ToList();
                 }
             }
@@ -210,30 +205,6 @@ namespace WarehouseReqs.Services
                                                        CreateDate = r.CreateDate,
                                                        Employee = r.Employee,
                                                        Filled = r.Filled,
-                                                       RequisitionItem = from ri in requisitionContext.RequisitionItem
-                                                                         where ri.RequisitionId == r.Id
-                                                                         select new RequisitionItemWithLocationViewModel
-                                                                         {
-                                                                             Id = ri.Id,
-                                                                             Item = ri.Item,
-                                                                             ItemDescription = ri.ItemDescription,
-                                                                             Lot = ri.Lot,
-                                                                             Operation = ri.Operation,
-                                                                             Quantity = ri.Quantity,
-                                                                             QuantityFilled = ri.QuantityFilled,
-                                                                             ReasonCode = ri.ReasonCode,
-                                                                             RequisitionId = ri.RequisitionId,
-                                                                             Filled = ri.Filled,
-                                                                             ItemLocViewModel = from l in location
-                                                                                                where l.Item == ri.Item
-                                                                                                select new ItemLocViewModel
-                                                                                                {
-                                                                                                    Item = l.Item,
-                                                                                                    Rank = l.Rank,
-                                                                                                    QtyOnHand = l.QtyOnHand,
-                                                                                                    Location = l.Loc
-                                                                                                }
-                                                                         }
                                                    };
                     var openReqs = requisitionsWithLocation.Where(r => r.Filled == false);
                     return openReqs.ToList();
@@ -303,30 +274,29 @@ namespace WarehouseReqs.Services
                 {
                     //check if item exists
                     var itemExists = matContext.Item.Where(i => i.Item1 == item.Item).FirstOrDefault();
-
+                    //check if item is cycle counted
+                    var cycle = matContext.Cycle.Where(i => i.Item == itemExists.Item1 && i.Stat == "C").FirstOrDefault();
+                    byte cycleCounted;
                     if (jobValid)
                     {
 
-                        if (item.Operation != "")
-                        {
-                            var jobmatlExists = matContext.Jobmatl.Where(i => i.Job.TrimStart() == requisition.Job && i.Item == item.Item && i.OperNum == Convert.ToInt32(item.Operation)).FirstOrDefault();
-
-                            if (jobmatlExists == null)
-                            {
-                                errors.Add("The item: " + item.Item + " does not exist on job " + requisition.Job + ", or the operation: " + item.Operation + " does not match the item.");
-                            }
-                        }
-                        else
+                        if (item.Operation == "")
                         {
                             errors.Add("Please enter an operation");
                         }
-
-
-
+             
                     }
                     if (item.Quantity <= 0)
                     {
                         errors.Add("Quantity must be a positive number");
+                    }
+                    if (cycle == null)
+                    {
+                        cycleCounted = 0;
+                    }
+                    else
+                    {
+                        cycleCounted = 1;
                     }
 
                     //if item does not exist add error
@@ -345,12 +315,17 @@ namespace WarehouseReqs.Services
                             Operation = item.Operation,
                             ItemDescription = itemExists.Description,
                             QuantityFilled = 0,
-                            Filled = false
+                            Filled = false,
+                            Unitcost = itemExists.UnitCost,
+                            Backflush = itemExists.Backflush,
+                            SerialTracked = itemExists.SerialTracked,
+                            LotTracked = itemExists.LotTracked,
+                            CycleCounted = cycleCounted
                         };
-
+                        //add it to list
                         requisitionItems.Add(requisitionItem);
                     }
-                    //add it to list
+                    
                 }
 
                 //if more than one requisition item has been added, add them back to the original requsition.
@@ -413,7 +388,7 @@ namespace WarehouseReqs.Services
                                     OperNum = requisitionItem.Operation,
                                     Item = requisitionItem.Item,
                                     Loc = partRequest.Location,
-                                    UM = item.Um,
+                                    Um = item.Um,
                                     Lot = partRequest.Lot,
                                     Reasoncode = requisitionItem.ReasonCode,
                                     ProcessedBy = partRequest.ProcessedBy.Split(':')[0]
@@ -430,13 +405,14 @@ namespace WarehouseReqs.Services
                                 {
                                     //CreateShortage(partRequest.quantity, requisition.Job, requisitionItem.Operation, requisitionItem.Item, partRequest.location, item.UM, partRequest.lot);
 
-                                    requisitionItem.RequisitionItemActions.Add(new RequisitionItemActions
+                                    RequisitionItemActions requisitionItemActions = new RequisitionItemActions
                                     {
                                         Action = "shortage",
+                                        RequisitionitemId = requisitionItem.Id,
                                         Quantity = partRequest.Quantity,
                                         ActionBy = partRequest.ProcessedBy,
                                         ActionDate = DateTime.Now
-                                    });
+                                    };
 
                                     requisitionItem.QuantityFilled += partRequest.Quantity;
 
@@ -482,6 +458,7 @@ namespace WarehouseReqs.Services
                                     {
                                         requisitionContext.Update(requisition);
                                         requisitionContext.Update(requisitionItem);
+                                        requisitionContext.Update(requisitionItemActions);
                                         requisitionContext.SaveChanges();
                                         return requisitionContext.Requisition.Where(i => i.Id == requisitionItem.Id).FirstOrDefault();
                                     }
@@ -515,7 +492,7 @@ namespace WarehouseReqs.Services
                     {
                         var dcjmId = matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcjm (trans_type, stat, trans_date, job, suffix, oper_num, item, whse, loc, qty, u_m, lot, override, emp_num)
                             VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}); 
-                            SELECT CAST(scope_identity() AS int)", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
+                            SELECT CAST(scope_identity() AS int)", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.Um, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
 
                         var dcjm = matContext.Dcjm.Where(i => i.TransNum == dcjmId).FirstOrDefault();
 
@@ -528,9 +505,9 @@ namespace WarehouseReqs.Services
                     else
                     {
                         Random random = new Random();
-                        int rand_trans_num = random.Next(1, 2147483647);
+                        int rand_trans_num = random.Next(1, 10000);
                         matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcitem (trans_num, trans_type, stat, trans_date, item, whse, loc, count_qty, u_m, lot, reason_code, emp_num) 
-                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
+                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.Um, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
 
                         var dcitem = matContext.Dcitem.Where(i => i.TransNum == rand_trans_num).FirstOrDefault();
                         if (dcitem?.ErrorMessage != null)
@@ -692,7 +669,7 @@ namespace WarehouseReqs.Services
                         var dcjmId = matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcjm (trans_type, stat, trans_date, job, suffix, oper_num, item, whse, loc, qty, u_m, lot, override, emp_num)
                     VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}); 
                     SELECT CAST(scope_identity() AS int)
-                    ", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
+                    ", insertItem.Quantity > 0 ? "1" : "2", "U", DateTime.Now, insertItem.Job.PadLeft(10), 0, (insertItem.OperNum != null ? Convert.ToInt32(insertItem.OperNum) : (int?)null), insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.Um, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, 1, insertItem.ProcessedBy.PadLeft(7));
 
                         var dcjm = matContext.Dcjm.Where(i => i.TransNum == dcjmId).FirstOrDefault();
 
@@ -708,7 +685,7 @@ namespace WarehouseReqs.Services
                         Random random = new Random();
                         int rand_trans_num = random.Next(1, 10000);
                         matContext.Database.ExecuteSqlCommand(@"INSERT INTO dcitem (trans_num, trans_type, stat, trans_date, item, whse, loc, count_qty, u_m, lot, reason_code, emp_num) 
-                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.UM, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
+                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", rand_trans_num, insertItem.Quantity > 0 ? "2" : "3", "U", DateTime.Now, insertItem.Item, "MAIN", insertItem.Loc, insertItem.Quantity, insertItem.Um, (!String.IsNullOrWhiteSpace(insertItem.Lot)) ? insertItem.Lot.ToString() : null, insertItem.Reasoncode.Substring(0, insertItem.Reasoncode.IndexOf("-")).Trim(), insertItem.ProcessedBy.PadLeft(7));
 
                         var dcitem = matContext.Dcitem.Where(i => i.TransNum == rand_trans_num).FirstOrDefault();
                         if (dcitem?.ErrorMessage != null)
@@ -764,7 +741,7 @@ namespace WarehouseReqs.Services
                                     OperNum = requisitionItem.Operation,
                                     Item = requisitionItem.Item,
                                     Loc = partRequest.Location,
-                                    UM = item.Um,
+                                    Um = item.Um,
                                     Lot = partRequest.Lot,
                                     Reasoncode = requisitionItem.ReasonCode,
                                     ProcessedBy = partRequest.ProcessedBy.Split(':')[0]
@@ -779,13 +756,14 @@ namespace WarehouseReqs.Services
 
                                 if (result == 1)
                                 {
-                                    requisitionItem.RequisitionItemActions.Add(new RequisitionItemActions
+                                    RequisitionItemActions requisitionItemActions = new RequisitionItemActions
                                     {
                                         Action = "issue",
+                                        RequisitionitemId = requisitionItem.Id,
                                         Quantity = partRequest.Quantity,
                                         ActionBy = partRequest.ProcessedBy,
                                         ActionDate = DateTime.Now
-                                    });
+                                    };
                                     requisitionItem.QuantityFilled += partRequest.Quantity;
 
                                     if (requisitionItem.QuantityFilled == requisitionItem.Quantity)
@@ -828,6 +806,7 @@ namespace WarehouseReqs.Services
                                     {
                                         requisitionContext.Update(requisition);
                                         requisitionContext.Update(requisitionItem);
+                                        requisitionContext.Update(requisitionItemActions);
                                         requisitionContext.SaveChanges();
                                         return requisitionContext.Requisition.Where(i => i.Id == requisitionItem.RequisitionId).FirstOrDefault();
                                     }
@@ -888,18 +867,21 @@ namespace WarehouseReqs.Services
             }
         }
 
-        public List<int> GetOperNumByJobAndItem(string jobNum, string itemNum)
+        public List<OperationSelectViewModel> GetOperNumByJob(string jobNum)
         {
             using (var matContext = new MatAppContext())
             {
-                if (!String.IsNullOrWhiteSpace(jobNum) && !String.IsNullOrWhiteSpace(itemNum))
+                if (!String.IsNullOrWhiteSpace(jobNum))
                 {
-                    var operNum = from jm in matContext.Jobmatl
-                                  join jr in matContext.Jobroute on new { jm.Job, jm.OperNum } equals new { jr.Job, jr.OperNum }
-                                  where jm.Job.Trim() == jobNum && jm.Item.Trim() == itemNum
-                                  select jm.OperNum;
-                                  
-                    return operNum.ToList();
+                    
+                    var operSelect = from jr in matContext.Jobroute
+                                  join w in matContext.Wc on new { jr.Wc1 } equals new { w.Wc1 }
+                                  where jr.Job.Trim() == jobNum
+                                  select new OperationSelectViewModel {
+                                     OperString = w.Wc1 + " " + w.Description + " - " + jr.OperNum
+                                  };
+                   
+                    return operSelect.ToList();
 
                 }
                 else
@@ -1044,6 +1026,28 @@ namespace WarehouseReqs.Services
             }
         }
 
-        
+        public string GetUnitOfMeasure(string itemNum)
+        {
+            using (var matContext = new MatAppContext())
+            {
+                if (!string.IsNullOrWhiteSpace(itemNum))
+                {
+                    var item = matContext.Item.Where(i => i.Item1 == itemNum).FirstOrDefault();
+                    if (item != null)
+                    {
+                        var itemDesc = item.Um.ToString();
+                        return JsonConvert.SerializeObject(itemDesc);
+                    }
+
+                    return null;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+        }
+       
     }
 }

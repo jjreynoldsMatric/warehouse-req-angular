@@ -6,6 +6,8 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { PartRequest } from "../../../models/partRequest";
 import { Requisition, Employee } from "../../../models/models";
 import { Router, ActivatedRoute } from "@angular/router";
+import { takeUntil } from "rxjs/operators"
+import { Subject } from "rxjs"
 
 @Component({
   selector: "app-create-shortage",
@@ -24,6 +26,10 @@ export class CreateShortageComponent implements OnInit {
   partRequest: PartRequest;
   issuePartsForm: FormGroup;
   shortageLocs: any;
+  whseEmployees: any;
+  private _destroyed$ = new Subject();
+
+
   constructor(private employeeService: EmployeeProvider, private itemsService: ItemsProvider, private reqService: RequisitionProvider, private fb: FormBuilder, private route: ActivatedRoute, public router: Router) {
 
   }
@@ -37,6 +43,8 @@ export class CreateShortageComponent implements OnInit {
     this.reqService.getRequisitionItem(this.reqItemId).subscribe(data => {
       this.reqItem = data;
       console.log(this.reqItem);
+      takeUntil(this._destroyed$);
+
     });
     console.log("SHORTAGE LOCS VVV");
     this.itemsService.loadShortageLocations(this.reqItemId).subscribe(res => {
@@ -44,8 +52,14 @@ export class CreateShortageComponent implements OnInit {
 
       console.log(this.shortageLocs);
       console.log("SHORTAGE LOCS ^");
+      takeUntil(this._destroyed$);
+
     });
-    this.employeeService.loadWhseEmployees();
+    this.employeeService.loadWhseEmployees().subscribe(response => {
+      this.whseEmployees = response;
+      takeUntil(this._destroyed$);
+
+    });
 
 
     this.partRequest = new PartRequest;
@@ -54,6 +68,10 @@ export class CreateShortageComponent implements OnInit {
       quantity: ["", Validators.compose([Validators.required, Validators.pattern("^-{0}[0-9]+\.?[0-9]*$")])],
       location: ["", Validators.required]
     });
+  }
+
+  public ngOnDestroy(): void {
+    this._destroyed$.next();
   }
 
   getFormData() {
@@ -72,6 +90,8 @@ export class CreateShortageComponent implements OnInit {
     this.reqService.createShortage(this.partRequest).subscribe(response => {
       console.log("Created Shortage");
       this.router.navigate(["/manage", this.reqId]);
+      takeUntil(this._destroyed$);
+
     });
 
   }

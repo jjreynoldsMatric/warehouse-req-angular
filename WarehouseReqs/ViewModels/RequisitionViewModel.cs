@@ -12,5 +12,7 @@ namespace WarehouseReqs.ViewModels
     public class RequisitionItemWithLocationViewModel : RequisitionItem {
         
         public IEnumerable<ItemLocViewModel> ItemLocViewModel {get; set;}
+
+        
     }
 }

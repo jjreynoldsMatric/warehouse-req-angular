@@ -15,6 +15,7 @@ namespace WarehouseReqs.Models
         {
         }
 
+        public virtual DbSet<Cycle> Cycle { get; set; }
         public virtual DbSet<Dcitem> Dcitem { get; set; }
         public virtual DbSet<Dcjm> Dcjm { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
@@ -24,18 +25,126 @@ namespace WarehouseReqs.Models
         public virtual DbSet<Jobmatl> Jobmatl { get; set; }
         public virtual DbSet<Jobroute> Jobroute { get; set; }
         public virtual DbSet<LotLoc> LotLoc { get; set; }
+        public virtual DbSet<Wc> Wc { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=SLDB1;Database=Mat_App;User Id=sa;Password=$yt3LinE;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Cycle>(entity =>
+            {
+                entity.HasKey(e => e.RowPointer)
+                    .ForSqlServerIsClustered(false);
+
+                entity.ToTable("cycle");
+
+                entity.HasIndex(e => new { e.Whse, e.Item, e.Loc, e.Lot, e.SerNum })
+                    .HasName("IX_cycle")
+                    .IsUnique()
+                    .ForSqlServerIsClustered();
+
+                entity.HasIndex(e => new { e.Whse, e.Loc, e.Item, e.Lot, e.SerNum })
+                    .HasName("IX_cycle_loc")
+                    .IsUnique();
+
+                entity.Property(e => e.RowPointer)
+                    .HasColumnType("RowPointerType")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CountQty)
+                    .HasColumnName("count_qty")
+                    .HasColumnType("QtyUnitType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("CurrentDateType")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasColumnType("UsernameType")
+                    .HasMaxLength(30)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.CutOffQty)
+                    .HasColumnName("cut_off_qty")
+                    .HasColumnType("QtyUnitType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.CycleDate)
+                    .HasColumnName("cycle_date")
+                    .HasColumnType("DateType")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ImportDocId)
+                    .HasColumnName("import_doc_id")
+                    .HasColumnType("ImportDocIdType")
+                    .HasMaxLength(25);
+
+                entity.Property(e => e.InWorkflow)
+                    .HasColumnType("FlagNyType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Item)
+                    .IsRequired()
+                    .HasColumnName("item")
+                    .HasColumnType("ItemType")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.Loc)
+                    .IsRequired()
+                    .HasColumnName("loc")
+                    .HasColumnType("LocType")
+                    .HasMaxLength(15);
+
+                entity.Property(e => e.Lot)
+                    .HasColumnName("lot")
+                    .HasColumnType("LotType")
+                    .HasMaxLength(15);
+
+                entity.Property(e => e.Message)
+                    .HasColumnType("Infobar")
+                    .HasMaxLength(2800);
+
+                entity.Property(e => e.NoteExistsFlag)
+                    .HasColumnType("FlagNyType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.RecordDate)
+                    .HasColumnType("CurrentDateType")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.SerNum)
+                    .HasColumnName("ser_num")
+                    .HasColumnType("SerNumType")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.Stat)
+                    .HasColumnName("stat")
+                    .HasColumnType("CycleStatusType")
+                    .HasMaxLength(1)
+                    .HasDefaultValueSql("('N')");
+
+                entity.Property(e => e.UpdatedBy)
+                    .IsRequired()
+                    .HasColumnType("UsernameType")
+                    .HasMaxLength(30)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.Whse)
+                    .IsRequired()
+                    .HasColumnName("whse")
+                    .HasColumnType("WhseType")
+                    .HasMaxLength(4);
+            });
+
             modelBuilder.Entity<Dcitem>(entity =>
             {
                 entity.HasKey(e => new { e.TransNum, e.TransType });
@@ -378,7 +487,7 @@ namespace WarehouseReqs.Models
                     .HasColumnType("DcTransTypeType")
                     .HasMaxLength(1);
 
-                entity.Property(e => e.Um)
+                entity.Property(e => e.UM)
                     .HasColumnName("u_m")
                     .HasColumnType("UMType")
                     .HasMaxLength(3);
@@ -2290,7 +2399,7 @@ namespace WarehouseReqs.Models
                     .HasColumnName("overview")
                     .HasColumnType("ProductOverviewType");
 
-                entity.Property(e => e.PmtCode)
+                entity.Property(e => e.PMTCode)
                     .HasColumnName("p_m_t_code")
                     .HasColumnType("PMTCodeType")
                     .HasMaxLength(1)
@@ -2577,7 +2686,7 @@ namespace WarehouseReqs.Models
                     .HasColumnName("u_ws_price")
                     .HasColumnType("CostPrcType");
 
-                entity.Property(e => e.Uf2Bin)
+                entity.Property(e => e.Uf2bin)
                     .HasColumnName("uf_2Bin")
                     .HasDefaultValueSql("(0)");
 
@@ -2719,6 +2828,10 @@ namespace WarehouseReqs.Models
                 entity.Property(e => e.UfRegulated)
                     .HasColumnName("uf_Regulated")
                     .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.UfReqCode)
+                    .HasColumnName("Uf_ReqCode")
+                    .HasMaxLength(10);
 
                 entity.Property(e => e.UfRmbinSize)
                     .HasColumnName("uf_RMBinSize")
@@ -3957,7 +4070,7 @@ namespace WarehouseReqs.Models
                     .HasColumnType("ScrapFactorType")
                     .HasDefaultValueSql("(0)");
 
-                entity.Property(e => e.Um)
+                entity.Property(e => e.UM)
                     .HasColumnName("u_m")
                     .HasColumnType("UMType")
                     .HasMaxLength(3);
@@ -4015,7 +4128,7 @@ namespace WarehouseReqs.Models
                     .HasName("IX_jobroute_RowPointer")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Wc);
+                entity.HasIndex(e => e.Wc1);
 
                 entity.Property(e => e.Job)
                     .HasColumnName("job")
@@ -4215,7 +4328,7 @@ namespace WarehouseReqs.Models
                     .HasColumnType("OverheadRateType")
                     .HasDefaultValueSql("(0)");
 
-                entity.Property(e => e.Wc)
+                entity.Property(e => e.Wc1)
                     .IsRequired()
                     .HasColumnName("wc")
                     .HasColumnType("WcType")
@@ -4392,6 +4505,662 @@ namespace WarehouseReqs.Models
                 entity.Property(e => e.VovhdCost)
                     .HasColumnName("vovhd_cost")
                     .HasColumnType("CostPrcType")
+                    .HasDefaultValueSql("((0))");
+            });
+
+            modelBuilder.Entity<Wc>(entity =>
+            {
+                entity.HasKey(e => e.Wc1);
+
+                entity.ToTable("wc");
+
+                entity.HasIndex(e => e.Charfld1);
+
+                entity.HasIndex(e => e.CostCode);
+
+                entity.HasIndex(e => e.Dept);
+
+                entity.HasIndex(e => e.RowPointer)
+                    .HasName("IX_wc_RowPointer")
+                    .IsUnique();
+
+                entity.Property(e => e.Wc1)
+                    .HasColumnName("wc")
+                    .HasColumnType("WcType")
+                    .HasMaxLength(6)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Alternate)
+                    .HasColumnName("alternate")
+                    .HasColumnType("WcType")
+                    .HasMaxLength(6);
+
+                entity.Property(e => e.BflushType)
+                    .HasColumnName("bflush_type")
+                    .HasColumnType("BflushTypeType")
+                    .HasMaxLength(1)
+                    .HasDefaultValueSql("('N')");
+
+                entity.Property(e => e.Calendar)
+                    .HasColumnName("calendar")
+                    .HasColumnType("CalendarType")
+                    .HasMaxLength(6);
+
+                entity.Property(e => e.Charfld1)
+                    .HasColumnName("charfld1")
+                    .HasColumnType("UserCharFldType")
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Charfld2)
+                    .HasColumnName("charfld2")
+                    .HasColumnType("UserCharFldType")
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Charfld3)
+                    .HasColumnName("charfld3")
+                    .HasColumnType("UserCharFldType")
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.CntrlPoint)
+                    .HasColumnName("cntrl_point")
+                    .HasColumnType("ListYesNoType")
+                    .HasDefaultValueSql("(1)");
+
+                entity.Property(e => e.CostCode)
+                    .HasColumnName("cost_code")
+                    .HasColumnType("CostCodeType")
+                    .HasMaxLength(3);
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("CurrentDateType")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasColumnType("UsernameType")
+                    .HasMaxLength(30)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.Datefld)
+                    .HasColumnName("datefld")
+                    .HasColumnType("UserDateFldType");
+
+                entity.Property(e => e.Decifld1)
+                    .HasColumnName("decifld1")
+                    .HasColumnType("UserDeciFldType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Decifld2)
+                    .HasColumnName("decifld2")
+                    .HasColumnType("UserDeciFldType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Decifld3)
+                    .HasColumnName("decifld3")
+                    .HasColumnType("UserDeciFldType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Dept)
+                    .HasColumnName("dept")
+                    .HasColumnType("DeptType")
+                    .HasMaxLength(6);
+
+                entity.Property(e => e.Description)
+                    .HasColumnName("description")
+                    .HasColumnType("DescriptionType")
+                    .HasMaxLength(40);
+
+                entity.Property(e => e.DispatchListsEmail)
+                    .HasColumnName("dispatch_lists_email")
+                    .HasColumnType("EmailType")
+                    .HasMaxLength(60);
+
+                entity.Property(e => e.Efficiency)
+                    .HasColumnName("efficiency")
+                    .HasColumnType("EfficiencyType")
+                    .HasDefaultValueSql("(100)");
+
+                entity.Property(e => e.FinishHrs)
+                    .HasColumnName("finish_hrs")
+                    .HasColumnType("SchedHoursType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.FlouvAcct)
+                    .HasColumnName("flouv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.FlouvAcctUnit1)
+                    .HasColumnName("flouv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FlouvAcctUnit2)
+                    .HasColumnName("flouv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FlouvAcctUnit3)
+                    .HasColumnName("flouv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FlouvAcctUnit4)
+                    .HasColumnName("flouv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcoAcct)
+                    .HasColumnName("fmco_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.FmcoAcctUnit1)
+                    .HasColumnName("fmco_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcoAcctUnit2)
+                    .HasColumnName("fmco_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcoAcctUnit3)
+                    .HasColumnName("fmco_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcoAcctUnit4)
+                    .HasColumnName("fmco_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcouvAcct)
+                    .HasColumnName("fmcouv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.FmcouvAcctUnit1)
+                    .HasColumnName("fmcouv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcouvAcctUnit2)
+                    .HasColumnName("fmcouv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcouvAcctUnit3)
+                    .HasColumnName("fmcouv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmcouvAcctUnit4)
+                    .HasColumnName("fmcouv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmouvAcct)
+                    .HasColumnName("fmouv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.FmouvAcctUnit1)
+                    .HasColumnName("fmouv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmouvAcctUnit2)
+                    .HasColumnName("fmouv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmouvAcctUnit3)
+                    .HasColumnName("fmouv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FmouvAcctUnit4)
+                    .HasColumnName("fmouv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.FovhdRateMch)
+                    .HasColumnName("fovhd_rate_mch")
+                    .HasColumnType("OverheadRateType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.InWorkflow)
+                    .HasColumnType("FlagNyType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Logifld)
+                    .HasColumnName("logifld")
+                    .HasColumnType("UserLogiFldType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.LrvAcct)
+                    .HasColumnName("lrv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.LrvAcctUnit1)
+                    .HasColumnName("lrv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.LrvAcctUnit2)
+                    .HasColumnName("lrv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.LrvAcctUnit3)
+                    .HasColumnName("lrv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.LrvAcctUnit4)
+                    .HasColumnName("lrv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.LuvAcct)
+                    .HasColumnName("luv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.LuvAcctUnit1)
+                    .HasColumnName("luv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.LuvAcctUnit2)
+                    .HasColumnName("luv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.LuvAcctUnit3)
+                    .HasColumnName("luv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.LuvAcctUnit4)
+                    .HasColumnName("luv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.MuvAcct)
+                    .HasColumnName("muv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.MuvAcctUnit1)
+                    .HasColumnName("muv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.MuvAcctUnit2)
+                    .HasColumnName("muv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.MuvAcctUnit3)
+                    .HasColumnName("muv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.MuvAcctUnit4)
+                    .HasColumnName("muv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.NoteExistsFlag)
+                    .HasColumnType("FlagNyType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Outside)
+                    .HasColumnName("outside")
+                    .HasColumnType("ListYesNoType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Overhead)
+                    .HasColumnName("overhead")
+                    .HasColumnType("OverheadBasisType")
+                    .HasMaxLength(3);
+
+                entity.Property(e => e.QueueHrs)
+                    .HasColumnName("queue_hrs")
+                    .HasColumnType("SchedHoursType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.QueueHrsA)
+                    .HasColumnName("queue_hrs_a")
+                    .HasColumnType("TotalHoursType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.QueueQtyT)
+                    .HasColumnName("queue_qty_t")
+                    .HasColumnType("QtyTotlType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.QueueTicks)
+                    .HasColumnName("queue_ticks")
+                    .HasColumnType("TicksType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.RecordDate)
+                    .HasColumnType("CurrentDateType")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.RowPointer)
+                    .HasColumnType("RowPointerType")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.RunHrsTLbr)
+                    .HasColumnName("run_hrs_t_lbr")
+                    .HasColumnType("TotalHoursType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RunHrsTMch)
+                    .HasColumnName("run_hrs_t_mch")
+                    .HasColumnType("TotalHoursType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.RunRateALbr)
+                    .HasColumnName("run_rate_a_lbr")
+                    .HasColumnType("PayRateType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.RunRateLbr)
+                    .HasColumnName("run_rate_lbr")
+                    .HasColumnType("RunRateType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.SchedDrv)
+                    .HasColumnName("sched_drv")
+                    .HasColumnType("SchedDriverType")
+                    .HasMaxLength(1)
+                    .HasDefaultValueSql("('M')");
+
+                entity.Property(e => e.SetupHrsT)
+                    .HasColumnName("setup_hrs_t")
+                    .HasColumnType("TotalHoursType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.SetupRate)
+                    .HasColumnName("setup_rate")
+                    .HasColumnType("RunRateType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.SetupRateA)
+                    .HasColumnName("setup_rate_a")
+                    .HasColumnType("PayRateType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.Setuprgid)
+                    .HasColumnName("setuprgid")
+                    .HasColumnType("ApsResgroupType")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.UpdatedBy)
+                    .IsRequired()
+                    .HasColumnType("UsernameType")
+                    .HasMaxLength(30)
+                    .HasDefaultValueSql("(suser_sname())");
+
+                entity.Property(e => e.VlouvAcct)
+                    .HasColumnName("vlouv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.VlouvAcctUnit1)
+                    .HasColumnName("vlouv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VlouvAcctUnit2)
+                    .HasColumnName("vlouv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VlouvAcctUnit3)
+                    .HasColumnName("vlouv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VlouvAcctUnit4)
+                    .HasColumnName("vlouv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcoAcct)
+                    .HasColumnName("vmco_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.VmcoAcctUnit1)
+                    .HasColumnName("vmco_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcoAcctUnit2)
+                    .HasColumnName("vmco_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcoAcctUnit3)
+                    .HasColumnName("vmco_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcoAcctUnit4)
+                    .HasColumnName("vmco_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcouvAcct)
+                    .HasColumnName("vmcouv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.VmcouvAcctUnit1)
+                    .HasColumnName("vmcouv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcouvAcctUnit2)
+                    .HasColumnName("vmcouv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcouvAcctUnit3)
+                    .HasColumnName("vmcouv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmcouvAcctUnit4)
+                    .HasColumnName("vmcouv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmouvAcct)
+                    .HasColumnName("vmouv_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.VmouvAcctUnit1)
+                    .HasColumnName("vmouv_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmouvAcctUnit2)
+                    .HasColumnName("vmouv_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmouvAcctUnit3)
+                    .HasColumnName("vmouv_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VmouvAcctUnit4)
+                    .HasColumnName("vmouv_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.VovhdRateMch)
+                    .HasColumnName("vovhd_rate_mch")
+                    .HasColumnType("OverheadRateType")
+                    .HasDefaultValueSql("(0)");
+
+                entity.Property(e => e.WipFovhdAcct)
+                    .HasColumnName("wip_fovhd_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.WipFovhdAcctUnit1)
+                    .HasColumnName("wip_fovhd_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipFovhdAcctUnit2)
+                    .HasColumnName("wip_fovhd_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipFovhdAcctUnit3)
+                    .HasColumnName("wip_fovhd_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipFovhdAcctUnit4)
+                    .HasColumnName("wip_fovhd_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipFovhdTotal)
+                    .HasColumnName("wip_fovhd_total")
+                    .HasColumnType("AmountType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.WipLbrAcct)
+                    .HasColumnName("wip_lbr_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.WipLbrAcctUnit1)
+                    .HasColumnName("wip_lbr_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipLbrAcctUnit2)
+                    .HasColumnName("wip_lbr_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipLbrAcctUnit3)
+                    .HasColumnName("wip_lbr_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipLbrAcctUnit4)
+                    .HasColumnName("wip_lbr_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipLbrTotal)
+                    .HasColumnName("wip_lbr_total")
+                    .HasColumnType("AmountType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.WipMatlAcct)
+                    .HasColumnName("wip_matl_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.WipMatlAcctUnit1)
+                    .HasColumnName("wip_matl_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipMatlAcctUnit2)
+                    .HasColumnName("wip_matl_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipMatlAcctUnit3)
+                    .HasColumnName("wip_matl_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipMatlAcctUnit4)
+                    .HasColumnName("wip_matl_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipMatlTotal)
+                    .HasColumnName("wip_matl_total")
+                    .HasColumnType("AmountType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.WipOutAcct)
+                    .HasColumnName("wip_out_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.WipOutAcctUnit1)
+                    .HasColumnName("wip_out_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipOutAcctUnit2)
+                    .HasColumnName("wip_out_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipOutAcctUnit3)
+                    .HasColumnName("wip_out_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipOutAcctUnit4)
+                    .HasColumnName("wip_out_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipOutTotal)
+                    .HasColumnName("wip_out_total")
+                    .HasColumnType("AmountType")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.WipVovhdAcct)
+                    .HasColumnName("wip_vovhd_acct")
+                    .HasColumnType("AcctType")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.WipVovhdAcctUnit1)
+                    .HasColumnName("wip_vovhd_acct_unit1")
+                    .HasColumnType("UnitCode1Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipVovhdAcctUnit2)
+                    .HasColumnName("wip_vovhd_acct_unit2")
+                    .HasColumnType("UnitCode2Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipVovhdAcctUnit3)
+                    .HasColumnName("wip_vovhd_acct_unit3")
+                    .HasColumnType("UnitCode3Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipVovhdAcctUnit4)
+                    .HasColumnName("wip_vovhd_acct_unit4")
+                    .HasColumnType("UnitCode4Type")
+                    .HasMaxLength(4);
+
+                entity.Property(e => e.WipVovhdTotal)
+                    .HasColumnName("wip_vovhd_total")
+                    .HasColumnType("AmountType")
                     .HasDefaultValueSql("((0))");
             });
         }

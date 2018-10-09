@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { RequisitionProvider } from "../requisition.service";
 import { ngxZendeskWebwidgetService } from "ngx-zendesk-webwidget";
 import { Router } from "@angular/router";
+import { takeUntil } from "rxjs/operators"
+import { Subject } from "rxjs"
 
 @Component({
   selector: "app-open-requisitions",
@@ -11,7 +13,7 @@ import { Router } from "@angular/router";
 export class OpenRequisitionsComponent implements OnInit {
 
   requisitions: any;
-
+  private _destroyed$ = new Subject();
   constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, public router: Router) {
     _ngxZendeskWebwidgetService.show();
   }
@@ -24,6 +26,7 @@ export class OpenRequisitionsComponent implements OnInit {
     this.reqService.loadRequisitions().subscribe(response => {
       this.requisitions = response;
       //console.log(JSON.stringify(this.requisitions));
+      takeUntil(this._destroyed$);
     });
   }
 
@@ -32,5 +35,7 @@ export class OpenRequisitionsComponent implements OnInit {
     //console.log("THIS IS THE REQ" + id);
     this.router.navigate(["/manage", id]);
   }
-
+  public ngOnDestroy(): void {
+    this._destroyed$.next();
+  }
 }

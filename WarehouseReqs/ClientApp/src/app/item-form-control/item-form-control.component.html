@@ -25,7 +25,7 @@
       </div>
       <div class="row">
         <div class="col text-center" no-padding>
-          <input type="number" [attr.id]="quantity" formControlName="quantity" min="0">
+          <input type="number" [attr.id]="quantity" formControlName="quantity" min="0"><span> {{this.unitOfMeasure}}</span>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
           <select [attr.id]="reasonCode" formControlName="reasonCode" placeholder="Reason Code" style="max-width: 100% !important"
                   no-padding>
             <option value="" disabled>Please select a reason code</option>
-            <option *ngFor="let reasonCode of reasonCodesService.reasonCodes">
+            <option *ngFor="let reasonCode of this.reasonCodes">
               {{reasonCode}}
             </option>
           </select>
@@ -58,8 +58,8 @@
           <select [attr.id]="operation" formControlName="operation" placeholder="Operation" style="max-width: 100% !important"
                   no-padding>
             <option value="" disabled>Please select an operation</option>
-            <option *ngFor="let op of operNums">
-              {{op}}
+            <option *ngFor="let op of operList">
+              {{op.operString}}
             </option>
           </select>
         </div>

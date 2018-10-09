@@ -2,6 +2,9 @@ import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { ReasonCodesProvider } from "../reason-codes.service";
 import { ItemsProvider } from "../items.service";
 import { FormGroup } from "@angular/forms";
+import { RequisitionProvider } from "../requisition.service";
+import { takeUntil } from "rxjs/operators"
+import { Subject } from "rxjs"
 
 @Component({
   selector: "edit-items",
@@ -15,8 +18,11 @@ export class EditItemsComponent implements OnInit {
   @Input() index: number;
   itemDesc: any;
   opRequired: boolean;
-  reqItems: any;
-  constructor(private reasonCodesService: ReasonCodesProvider, private itemServ: ItemsProvider) {
+  operList: any;
+  unitOfMeasure: any;
+  private _destroyed$ = new Subject();
+
+  constructor(private reasonCodesService: ReasonCodesProvider, private itemServ: ItemsProvider, private reqService: RequisitionProvider) {
     this.reasonCodesService.loadReasonCodes();
 
   }
@@ -24,7 +30,35 @@ export class EditItemsComponent implements OnInit {
   ngOnInit() {
     //console.log(this.newReqForm);
     this.rc = this.newReqForm.controls["reasonCode"].value;
-    //console.log(this.rc);
+
+
+    let job = this.newReqForm.parent.parent.get("job").value;
+    let item = this.newReqForm.get("item").value;
+    if (item) {
+      this.itemServ.getItemDescription(item).subscribe(res => {
+        this.itemDesc = res.toString();
+        takeUntil(this._destroyed$);
+      }, err => {
+        this.itemDesc = "Could not find this item";
+        takeUntil(this._destroyed$);
+        });
+      this.reqService.getUnitOfMeasure(item).subscribe(res => {
+        this.unitOfMeasure = res;
+        takeUntil(this._destroyed$);
+      });
+    }
+    if (job && item) {
+
+      this.reqService.getOperNum(job).subscribe(res => {
+        this.operList = res;
+        takeUntil(this._destroyed$);
+        //console.log(this.operNums);
+      });
+    }
+  }
+
+  public ngOnDestroy(): void {
+    this._destroyed$.next();
   }
 
   isSelected(reasonCode) {
@@ -35,14 +69,27 @@ export class EditItemsComponent implements OnInit {
   }
 
   enterItem(item: string) {
+    let job = this.newReqForm.parent.parent.get("job").value;
+
     if (item) {
       this.itemServ.getItemDescription(item).subscribe(res => {
         this.itemDesc = res.toString();
+        takeUntil(this._destroyed$);
       }, err => {
         this.itemDesc = "Could not find this item";
+        takeUntil(this._destroyed$);
       }
       );
     }
+    if (job && item) {
+
+      this.reqService.getOperNum(job).subscribe(res => {
+        this.operList = res;
+        //console.log(this.operNums);
+        takeUntil(this._destroyed$);
+      });
+    }
+    
   }
 
   getFormInfo() {

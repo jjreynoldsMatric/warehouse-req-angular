@@ -14,14 +14,24 @@
       <h5>Choose your name/employee # and how many you are issuing.</h5>
     </div>
   </div>
-  <div class="row" style="align-items: center">
+  <div class="row" *ngIf="reqItem?.cycleCounted === 1">
     <div class="col text-center">
-      <h6>Item: {{reqItem?.item}}</h6>
-    </div>
-    <div class="col text-center">
-      <h6>Quantity: {{reqItem?.quantityFilled}}/{{reqItem?.quantity}}</h6>
+      <h5 style="color:red">This item is Cycle Counted. Please inform the Counter of any parts that are being issued.</h5>
     </div>
   </div>
+
+  <div class="row" style="align-items: center">
+    <div class="col text-center">
+      <h5>Item: {{reqItem?.item}}</h5>
+    </div>
+    <div class="col text-center">
+      <h5 [ngStyle]="{'color':reqItem >= 500 ? 'red' : 'black' }">Total Item Cost: {{reqItem?.totalcost}}</h5>
+    </div>
+    <div class="col text-center">
+      <h5>Quantity: {{reqItem?.quantityFilled}}/{{reqItem?.quantity}}</h5>
+    </div>
+  </div>
+
 
   <form [formGroup]="issuePartsForm">
     <div class="row" style="align-content: center; align-items: center">
@@ -35,7 +45,7 @@
           <div class="col text-center">
             <select id="employee" name="employee" formControlName="employee">
               <option value="" disabled>Please select an employee</option>
-              <option *ngFor="let employee of employeeService.whseEmployees" [ngValue]="employee.empFull">
+              <option *ngFor="let employee of this.whseEmployees" [ngValue]="employee.empFull">
                 {{employee.empFull}}
               </option>
             </select>

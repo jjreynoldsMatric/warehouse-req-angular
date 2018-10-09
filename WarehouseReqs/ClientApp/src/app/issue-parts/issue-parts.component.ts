@@ -6,6 +6,9 @@ import { ItemsProvider } from "../items.service";
 import { RequisitionProvider } from "../requisition.service";
 import { ngxZendeskWebwidgetService } from "../../../node_modules/ngx-zendesk-webwidget";
 import { ActivatedRoute, Router } from "@angular/router";
+import { takeUntil } from "rxjs/operators"
+import { Subject } from "rxjs"
+
 
 @Component({
   selector: "app-issue-parts",
@@ -20,8 +23,10 @@ export class IssuePartsComponent implements OnInit {
   partRequest: PartRequest;
   issuePartsForm: FormGroup;
   lots: any;
-  reqItemId: any;
-  reqId: any;
+  reqItemId: number;
+  reqId: number;
+  whseEmployees: any;
+  private _destroyed$ = new Subject();
 
   constructor(private employeeService: EmployeeProvider, private itemsService: ItemsProvider, private reqService: RequisitionProvider, private fb: FormBuilder, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, private route: ActivatedRoute, public router: Router) {
     _ngxZendeskWebwidgetService.show();
@@ -35,12 +40,18 @@ export class IssuePartsComponent implements OnInit {
     this.reqId = +this.route.snapshot.paramMap.get("ReqId");
     this.reqService.getRequisitionItem(this.reqItemId).subscribe(data => {
       this.reqItem = data;
-      //console.log(this.reqItem);
+      console.log(this.reqItem);
+      takeUntil(this._destroyed$);
     });
     this.itemsService.loadLocationsWithLot(this.reqItemId).subscribe(data => {
       this.lots = data;
+      takeUntil(this._destroyed$);
     });
-    this.employeeService.loadWhseEmployees();
+    this.employeeService.loadWhseEmployees().subscribe(response => {
+      this.whseEmployees = response;
+      takeUntil(this._destroyed$);
+
+    });
 
 
     this.issuePartsForm = this.fb.group({
@@ -49,6 +60,10 @@ export class IssuePartsComponent implements OnInit {
       location: ["", Validators.required]
     });
 
+  }
+
+  public ngOnDestroy(): void {
+    this._destroyed$.next();
   }
 
   issueParts() {
@@ -61,8 +76,12 @@ export class IssuePartsComponent implements OnInit {
     console.log(this.partRequest);
     this.reqService.issueParts(this.partRequest).subscribe(response => {
       this.router.navigate(["/manage", this.reqId]);
+      takeUntil(this._destroyed$);
+
     }, err => {
       this.error = err;
+      takeUntil(this._destroyed$);
+
     });
   }
 

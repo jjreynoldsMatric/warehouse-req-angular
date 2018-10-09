@@ -28,7 +28,9 @@ namespace WarehouseReqs.Services
         bool UpdateRequisition(Requisition updatedReq);
         bool RemoveReqItem(int reqId, int reqItemId);
         RequisitionItem GetRequisitionItem(int reqItemId);
-        List<int> GetOperNumByJobAndItem(string jobNum, string itemNum);
+        List<OperationSelectViewModel> GetOperNumByJob(string jobNum);
         bool IsJobValid(string jobNum);
+        string GetUnitOfMeasure(string item);
+        
     }
 }

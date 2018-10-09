@@ -13,6 +13,8 @@ import { ReasonCodesProvider } from "../reason-codes.service";
 import { RequisitionProvider } from "../requisition.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { forEach } from "@angular/router/src/utils/collection";
+import { takeUntil } from "rxjs/operators"
+import { Subject } from "rxjs"
 
 @Component({
   selector: "app-edit",
@@ -36,6 +38,7 @@ export class EditComponent implements OnInit {
   editReq: any;
   editRI: RequisitionItem[];
   jobValid: any;
+  private _destroyed$ = new Subject();
 
   constructor(private employeeService: EmployeeProvider, private reasonCodesService: ReasonCodesProvider, private fb: FormBuilder, private reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, private route: ActivatedRoute, public router: Router) {
     this.itemsArray = [];
@@ -65,7 +68,7 @@ export class EditComponent implements OnInit {
       this.editRI.forEach(item => {
         let newItem = this.fb.group({
           item: [item.item, Validators.required],
-          quantity: [item.quantity, Validators.compose([Validators.required, Validators.pattern("^[0-9]+$")])],
+          quantity: [item.quantity, Validators.compose([Validators.required, Validators.pattern("^-{0}[0-9]+\.?[0-9]*$")])],
           reasonCode: [item.reasonCode],
           operation: [item.operation],
 
@@ -80,13 +83,19 @@ export class EditComponent implements OnInit {
       this.setValidators();
       //console.log(this.editReq);
       this.newReqForm = this.newForm;
+      takeUntil(this._destroyed$);
+
     });
-
-
   }
+
+  public ngOnDestroy(): void {
+    this._destroyed$.next();
+  }
+
   openFeedback() {
     this._ngxZendeskWebwidgetService.activate();
   }
+
   setValidators() {
     if (this.newForm.controls["job"].value === "" || this.newForm.controls["job"].value === null) {
       for (let i = 0; i < this.arrayControl.length; i++) {
@@ -98,7 +107,7 @@ export class EditComponent implements OnInit {
     else {
       for (let i = 0; i < this.arrayControl.length; i++) {
         this.arrayControl.controls[i].get("operation").enable();
-        this.arrayControl.controls[i].get("operation").setValidators(Validators.compose([Validators.pattern("^[0-9]+$"), Validators.required]));
+        this.arrayControl.controls[i].get("operation").setValidators(Validators.required);
         this.arrayControl.controls[i].get("reasonCode").disable();
       }
     }
@@ -107,7 +116,7 @@ export class EditComponent implements OnInit {
 
         for (let i = 0; i < this.arrayControl.length; i++) {
           this.arrayControl.controls[i].get("operation").enable();
-          this.arrayControl.controls[i].get("operation").setValidators(Validators.compose([Validators.pattern("^[0-9]+$"), Validators.required]));
+          this.arrayControl.controls[i].get("operation").setValidators(Validators.required);
           this.arrayControl.controls[i].get("reasonCode").disable();
         }
       }
@@ -194,8 +203,12 @@ export class EditComponent implements OnInit {
       console.log("Should have PATCHED the req");
       let id = this.requisition.id;
       this.router.navigate(["/manage", id]);
+      takeUntil(this._destroyed$);
+
     }, err => {
       this.errorMessage = err.error;
+      takeUntil(this._destroyed$);
+
     });
 
     this.reqService.loadRequisitions();
@@ -235,8 +248,12 @@ export class EditComponent implements OnInit {
         else {
           this.jobValid = "Uh something went wrong";
         }
+        takeUntil(this._destroyed$);
+
       }, err => {
         this.jobValid = err;
+        takeUntil(this._destroyed$);
+
       }
       );
     }

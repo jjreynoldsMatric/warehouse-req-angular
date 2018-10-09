@@ -35,7 +35,7 @@ namespace WarehouseReqs.Models
         public DateTime? PickDate { get; set; }
         public short? BomSeq { get; set; }
         public decimal? MatlQtyConv { get; set; }
-        public string Um { get; set; }
+        public string UM { get; set; }
         public decimal? IncPriceConv { get; set; }
         public decimal? CostConv { get; set; }
         public byte? Backflush { get; set; }

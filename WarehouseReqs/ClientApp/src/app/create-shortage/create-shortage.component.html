@@ -31,7 +31,7 @@
           <div class="col text-center">
             <select id="employee" name="employee" formControlName="employee">
               <option value="" disabled>Please select an employee</option>
-              <option *ngFor="let employee of employeeService.whseEmployees" [ngValue]="employee.empFull">
+              <option *ngFor="let employee of this.whseEmployees" [ngValue]="employee.empFull">
                 {{employee.empFull}}
               </option>
             </select>

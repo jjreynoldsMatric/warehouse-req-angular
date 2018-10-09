@@ -5,6 +5,9 @@ import { ReasonCode, ItemLocViewModel, Employee, Requisition, Item } from "../..
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { IssuePartsComponent } from "../issue-parts/issue-parts.component";
+import { takeUntil } from "rxjs/operators"
+import { Subject } from "rxjs"
+
 @Component({
   selector: "app-manage",
   templateUrl: "./manage.component.html",
@@ -23,7 +26,7 @@ export class ManageComponent implements OnInit {
   reasonCode: ReasonCode;
   ReqId: any;
   sub: any;
-
+  private _destroyed$ = new Subject();
 
   constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, private route: ActivatedRoute, public router: Router) {
     _ngxZendeskWebwidgetService.show();
@@ -31,19 +34,19 @@ export class ManageComponent implements OnInit {
 
   ngOnInit() {
     this.ReqId = +this.route.snapshot.paramMap.get("ReqId");
-    //console.log(this.route.snapshot.paramMap.keys);
-    //console.log(this.ReqId);
+    
     this.reqService.getRequisition(this.ReqId).subscribe(data => {
       this.req = data;
-      //console.log("***************************")
-      //console.log(this.req)
-      //console.log("***************************")
-
+      console.log(this.req);
+      takeUntil(this._destroyed$);
     });
 
   }
   openFeedback() {
     this._ngxZendeskWebwidgetService.activate();
+  }
+  public ngOnDestroy(): void {
+    this._destroyed$.next();
   }
 
   issueParts(item) {

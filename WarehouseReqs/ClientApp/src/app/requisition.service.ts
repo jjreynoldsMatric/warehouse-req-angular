@@ -52,10 +52,16 @@ export class RequisitionProvider {
     return this.http.delete(`/api/requisitions/RemoveReqItem/${reqId}/${reqItemId}`);
   }
 
-  getOperNum(jobNum, itemNum) {
-    return this.http.get(`/api/requisitions/GetOper/${jobNum}/${itemNum}`);
+  getOperNum(jobNum) {
+    return this.http.get(`/api/requisitions/GetOper/${jobNum}`);
   }
+
   isJobValid(jobNum) {
     return this.http.get(`/api/requisitions/job/${jobNum}`);
   }
+
+  getUnitOfMeasure(item) {
+    return this.http.get(`/api/requisitions/unitofmeasure/${item}`)
+  }
+
 }

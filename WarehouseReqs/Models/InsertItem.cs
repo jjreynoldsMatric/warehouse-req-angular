@@ -12,7 +12,7 @@ namespace WarehouseReqs.Models
         public string OperNum { get; set; }
         public string Item { get; set; }
         public string Loc { get; set; }
-        public string UM { get; set; }
+        public string Um { get; set; }
         public string Lot { get; set; }
         public string Reasoncode { get; set; }
         public string ProcessedBy { get; set; }

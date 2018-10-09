@@ -215,12 +215,12 @@ namespace WarehouseReqs.Controllers
                 return Json(ex.Message);
             }
         }
-        [HttpGet("/api/requisitions/GetOper/{jobNum}/{itemNum}")]
-        public JsonResult GetOperNum(string jobNum, string itemNum)
+        [HttpGet("/api/requisitions/GetOper/{jobNum}")]
+        public JsonResult GetOperNum(string jobNum)
         {
             try
             {
-                var oper = _requisitionService.GetOperNumByJobAndItem(jobNum, itemNum);
+                var oper = _requisitionService.GetOperNumByJob(jobNum);
                 return Json(oper);
             }
             catch (Exception ex)
@@ -242,5 +242,20 @@ namespace WarehouseReqs.Controllers
                 return Json(ex.Message);
             }
         }
+
+        [HttpGet("/api/requisitions/unitofmeasure/{item}")]
+        public JsonResult GetUnitOfMeasure(string item)
+        {
+            try
+            {
+                var unitofmeasure = _requisitionService.GetUnitOfMeasure(item);
+                return Json(unitofmeasure);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
     }
 }

@@ -43,34 +43,46 @@
 
   <div class="row justify-content-center">
     <div class="col header text-center">Part Number</div>
-    <div class="col header text-center">Reason Code</div>
-    <div class="col header text-center">Operation</div>
+    <div class="col header text-center" *ngIf="!req.job">Reason Code</div>
+    <div class="col header text-center" *ngIf="req.job">Operation</div>
+    <div class="col header text-center">Tracked</div>
+    <div class="col header text-center">Backflushed</div>
     <div class="col header text-center">Filled</div>
+    <div class="col header text-center">Total Cost</div>
     <div class="col header text-center">Locations</div>
     <div class="col header text-center">Action</div>
   </div>
 
   <div *ngFor="let item of req.requisitionItem" class="row justify-content-center well" style="border:1px solid black ; border-radius: 10px; font-size: 140%; font-weight: 500; margin-bottom: 5px; align-items:center">
     <div class="col data text-center">{{item.item}}</div>
-    <div class="col data text-center">{{item.reasonCode}}</div>
-    <div class="col data text-center">{{item.operation}}</div>
-    <div class="col data text-center">{{item.quantityFilled}}/{{item.quantity}}</div>
+    <div class="col data text-center" *ngIf="!req.job">{{item.reasonCode}}</div>
+    <div class="col data text-center" *ngIf="req.job">{{item.operation}}</div>
     <div class="col data text-center">
+      <span *ngIf="item.lotTracked === 1 && item.serialTracked === 1">Lot & Serial</span>
+      <span *ngIf="item.lotTracked === 1 && item.serialTracked === 0">Lot</span>
+      <span *ngIf="item.lotTracked === 0 && item.serialTracked === 1">Serial</span>
+      <span *ngIf="item.lotTracked === 0 && item.serialTracked === 0">Not Tracked</span>
+    </div>
+    <div class="col data text-center" *ngIf="item.backflush === 1">Yes</div>
+    <div class="col data text-center" *ngIf="item.backflush === 0">No</div>
+    <div class="col data text-center">{{item.quantityFilled}}/{{item.quantity}}</div>
+    <div class="col data text-center">{{item.totalcost}}</div>
+    <div class="col data text-center"  >
       <div class="data justify-content-center" *ngFor="let location of item.itemLocViewModel ; index as i" [attr.data-index]="i">
-        <div class="col data text-center">
+        <div class="col data text-center" style="padding-left: 0; padding-right: 0;">
           {{location.location}}: {{location.qtyOnHand}}
         </div>
       </div>
     </div>
     <div class="col button text-center" *ngIf="item.itemLocViewModel.length !== 0">
-      <button class="btn btn-primary btn-lg" color="secondary" (click)="issueParts(item)">Issue Parts</button>
+      <button class="btn btn-primary btn-sm" color="secondary" (click)="issueParts(item)">Issue Parts</button>
     </div>
     <div class="col button text-center" *ngIf="item.itemLocViewModel.length === 0">
-      <button class="btn btn-danger btn-lg" (click)="createShortage(item)">Create Shortage</button>
+      <button class="btn btn-danger btn-sm" (click)="createShortage(item)">Create Shortage</button>
     </div>
   </div>
-  <div class="row">
-    <div class="col button text-center" style="padding-left:0px;">
+  <div class="row" *ngIf="!req.filled">
+    <div class="col button text-center" style="padding-left:0px;" >
       <button class="btn btn-danger btn-lg" type="button" (click)="delete()">Delete This Requisition</button>
     </div>
     <div class="col button text-center">

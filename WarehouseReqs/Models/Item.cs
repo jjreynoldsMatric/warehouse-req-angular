@@ -16,7 +16,7 @@ namespace WarehouseReqs.Models
         public string AbcCode { get; set; }
         public string DrawingNbr { get; set; }
         public string ProductCode { get; set; }
-        public string PmtCode { get; set; }
+        public string PMTCode { get; set; }
         public string CostMethod { get; set; }
         public decimal? LstLotSize { get; set; }
         public decimal? UnitCost { get; set; }
@@ -176,7 +176,7 @@ namespace WarehouseReqs.Models
         public string UfSegment { get; set; }
         public string UfMinMethod { get; set; }
         public decimal? UfAmsCost { get; set; }
-        public int? Uf2Bin { get; set; }
+        public int? Uf2bin { get; set; }
         public int? UfFgbinSize { get; set; }
         public int? UfPullRate { get; set; }
         public int? UfRmbinSize { get; set; }
@@ -259,6 +259,7 @@ namespace WarehouseReqs.Models
         public byte? UfItar { get; set; }
         public string UfIpc { get; set; }
         public string UfRoHs { get; set; }
+        public string UfReqCode { get; set; }
 
         public Job JobNavigation { get; set; }
     }

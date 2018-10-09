@@ -6,18 +6,26 @@ namespace WarehouseReqs.Models
 {
     public partial class WarehouseRequisitionContext : DbContext
     {
+        public WarehouseRequisitionContext()
+        {
+        }
+
+        public WarehouseRequisitionContext(DbContextOptions<WarehouseRequisitionContext> options)
+            : base(options)
+        {
+        }
+
         public virtual DbSet<ReasonCode> ReasonCode { get; set; }
         public virtual DbSet<Requisition> Requisition { get; set; }
         public virtual DbSet<RequisitionItem> RequisitionItem { get; set; }
         public virtual DbSet<RequisitionItemActions> RequisitionItemActions { get; set; }
 
-        // Unable to generate entity type for table 'dbo.alembic_version'. Please see the warning messages.
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=SLDB1;Database=WarehouseRequisition;User Id=sa;Password=$yt3LinE;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=SLDB1;Database=WarehouseRequisition;User Id=sa;Password=$yt3LinE;");
             }
         }
 
@@ -77,13 +85,23 @@ namespace WarehouseReqs.Models
                     .HasColumnName("job")
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnName("updateDate")
+                    .HasColumnType("datetime");
             });
 
             modelBuilder.Entity<RequisitionItem>(entity =>
             {
                 entity.ToTable("requisition_item");
 
+                entity.HasIndex(e => e.RequisitionId);
+
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Backflush).HasColumnName("backflush");
+
+                entity.Property(e => e.CycleCounted).HasColumnName("cycle_counted");
 
                 entity.Property(e => e.Filled).HasColumnName("filled");
 
@@ -102,14 +120,19 @@ namespace WarehouseReqs.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.LotTracked).HasColumnName("lot_tracked");
+
                 entity.Property(e => e.Operation)
                     .HasColumnName("operation")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
+                    .HasMaxLength(250);
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                entity.Property(e => e.Quantity)
+                    .HasColumnName("quantity")
+                    .HasColumnType("decimal(20, 8)");
 
-                entity.Property(e => e.QuantityFilled).HasColumnName("quantity_filled");
+                entity.Property(e => e.QuantityFilled)
+                    .HasColumnName("quantity_filled")
+                    .HasColumnType("decimal(20, 8)");
 
                 entity.Property(e => e.ReasonCode)
                     .HasColumnName("reasonCode")
@@ -118,16 +141,27 @@ namespace WarehouseReqs.Models
 
                 entity.Property(e => e.RequisitionId).HasColumnName("requisition_id");
 
-                // entity.HasOne(d => d.Requisition)
-                //     .WithMany(p => p.RequisitionItem)
-                //     .HasForeignKey(d => d.RequisitionId)
-                //     .OnDelete(DeleteBehavior.ClientSetNull)
-                //     .HasConstraintName("FK__requisiti__requi__208CD6FA");
+                entity.Property(e => e.SerialTracked).HasColumnName("serial_tracked");
+
+                entity.Property(e => e.Totalcost)
+                    .HasColumnName("totalcost")
+                    .HasColumnType("decimal(20, 8)");
+
+                entity.Property(e => e.Unitcost)
+                    .HasColumnName("unitcost")
+                    .HasColumnType("decimal(20, 8)");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnName("updateDate")
+                    .HasColumnType("datetime");
+
             });
 
             modelBuilder.Entity<RequisitionItemActions>(entity =>
             {
                 entity.ToTable("requisition_item_actions");
+
+                entity.HasIndex(e => e.RequisitionitemId);
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -147,15 +181,15 @@ namespace WarehouseReqs.Models
                     .HasColumnName("actionDate")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                entity.Property(e => e.Quantity)
+                    .HasColumnName("quantity")
+                    .HasColumnType("decimal(20, 8)");
 
                 entity.Property(e => e.RequisitionitemId).HasColumnName("requisitionitem_id");
 
-                // entity.HasOne(d => d.Requisitionitem)
-                //     .WithMany(p => p.RequisitionItemActions)
-                //     .HasForeignKey(d => d.RequisitionitemId)
-                //     .OnDelete(DeleteBehavior.ClientSetNull)
-                //     .HasConstraintName("FK__requisiti__requi__245D67DE");
+                entity.HasOne(d => d.Requisitionitem)
+                    .WithMany(p => p.RequisitionItemActions)
+                    .HasForeignKey(d => d.RequisitionitemId);
             });
         }
     }
