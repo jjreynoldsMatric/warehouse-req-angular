@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { IssuePartsComponent } from "../issue-parts/issue-parts.component";
 import { takeUntil } from "rxjs/operators"
 import { Subject } from "rxjs"
+import { forEach } from "@angular/router/src/utils/collection";
+import { ModalService } from "../modal.service";
 
 @Component({
   selector: "app-manage",
@@ -28,7 +30,7 @@ export class ManageComponent implements OnInit {
   sub: any;
   private _destroyed$ = new Subject();
 
-  constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, private route: ActivatedRoute, public router: Router) {
+  constructor(public reqService: RequisitionProvider, private _ngxZendeskWebwidgetService: ngxZendeskWebwidgetService, private route: ActivatedRoute, public router: Router, public modalService: ModalService) {
     _ngxZendeskWebwidgetService.show();
   }
 
@@ -40,7 +42,7 @@ export class ManageComponent implements OnInit {
       console.log(this.req);
       takeUntil(this._destroyed$);
     });
-
+    this.overpriceCheck();
   }
   openFeedback() {
     this._ngxZendeskWebwidgetService.activate();
@@ -67,5 +69,13 @@ export class ManageComponent implements OnInit {
 
   delete() {
     this.router.navigate(["/confirm", this.ReqId]);
+  }
+
+  overpriceCheck() {
+    for (let i = 0; i < this.req.requisitionItem.length; i++) {
+      if (this.req.requisitionItem[i].totalcost >= 500) {
+        this.modalService.open("over-priced");
+      }
+    }
   }
 }

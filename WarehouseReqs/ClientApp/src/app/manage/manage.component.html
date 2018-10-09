@@ -89,5 +89,10 @@
       <button class=" btn btn-success btn-lg" type="button" (click)="edit(req)">Edit Requisition</button>
     </div>
   </div>
+
+  <wr-modal id="over-priced">
+    <h1>This requisition has an item who's total cost is over the allowable amount. Please contact the requester's supervisor</h1>
+    <button (click)="closeModal('over-priced')">Close</button>
+  </wr-modal>
 </div>
 

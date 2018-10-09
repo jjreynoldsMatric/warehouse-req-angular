@@ -23,6 +23,8 @@ import { EmployeeProvider } from "./employee.service";
 import { ItemFormControlComponent } from "./item-form-control/item-form-control.component";
 import { APP_BASE_HREF } from "@angular/common";
 import { HelpComponent } from './help/help.component';
+import { ModalComponent } from './modal/modal.component';
+import { ModalService } from "./modal.service";
 
 export class ZendeskConfig extends ngxZendeskWebwidgetConfig {
   accountUrl = "matric.zendesk.com";
@@ -60,7 +62,8 @@ const routes: Routes = [
     EditItemsComponent,
     IssuePartsComponent,
     ItemFormControlComponent,
-    HelpComponent
+    HelpComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +92,7 @@ const routes: Routes = [
     HelpComponent
   ],
   exports: [],
-  providers: [RequisitionProvider, ReasonCodesProvider, ItemsProvider, EmployeeProvider, { provide: APP_BASE_HREF, useValue: "/" }],
+  providers: [RequisitionProvider, ReasonCodesProvider, ItemsProvider, EmployeeProvider, { provide: APP_BASE_HREF, useValue: "/" }, ModalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
